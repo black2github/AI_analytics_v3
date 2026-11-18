@@ -233,7 +233,8 @@ def run_check(files: List[Path], source_path: Optional[Path],
               mention_tags: frozenset = frozenset(),
               mention_labels: Optional[list] = None,
               mention_export=None,
-              mention_waived: Optional[list] = None
+              mention_waived: Optional[list] = None,
+              mention_inventory: Optional[dict] = None
               ) -> Tuple[List[str], bool]:
     """Полная связка режима --check одной функцией — ЕДИНАЯ точка
     подключения проверок для CLI и selfcheck-диспетчера (двойной
@@ -267,7 +268,9 @@ def run_check(files: List[Path], source_path: Optional[Path],
     строк таблиц, которые сторож упоминаний целей не судит: (отн. путь, строка, тег, ярлык);
     по нему selfcheck печатает строку i на комплект (check_target_mentions).
     mention_export — указатель выгрузки (source_profile.source_mention_index), mention_waived —
-    сборщик снятого сторожами упоминаний: (вид, отн. путь, текст); строки i на комплект."""
+    сборщик снятого сторожами упоминаний: (вид, отн. путь, текст); строки i на комплект.
+    mention_inventory — страницы описи для сторожа упоминаний целей: page_id → (title, снята с
+    миграции — класс source_coverage, основание); строит selfcheck по описи прогона."""
     main_file = files[0]
     src_text = (apply_critic(strip_history(
         _fs.read_text(source_path, encoding="utf-8")))
@@ -350,7 +353,7 @@ def run_check(files: List[Path], source_path: Optional[Path],
         card_text, combined = blank_notes(card_text), blank_notes(combined)
     # проверки — реестр SOURCE_CHECKS (ядро kitcheck.core): порядок реестра —
     # порядок строк отчёта, вердикт — в run_checks
-    fx = _SourceCtx(files=files, source_path=source_path, min_valid_pct=min_valid_pct, docs_root=docs_root, soft_markers=soft_markers, pardon_source=pardon_source, amnesty_sources=amnesty_sources, card_text=card_text, combined=combined, main_file=main_file, src_text=src_text, allow_sibling_docs=allow_sibling_docs, inventory=inventory, group_extra_sources=group_extra_sources, call_cards=call_cards, mention_tags=mention_tags, mention_labels=mention_labels, mention_export=mention_export, mention_waived=mention_waived)
+    fx = _SourceCtx(files=files, source_path=source_path, min_valid_pct=min_valid_pct, docs_root=docs_root, soft_markers=soft_markers, pardon_source=pardon_source, amnesty_sources=amnesty_sources, card_text=card_text, combined=combined, main_file=main_file, src_text=src_text, allow_sibling_docs=allow_sibling_docs, inventory=inventory, group_extra_sources=group_extra_sources, call_cards=call_cards, mention_tags=mention_tags, mention_labels=mention_labels, mention_export=mention_export, mention_waived=mention_waived, mention_inventory=mention_inventory)
     f_lines, f_ok = run_checks(SOURCE_CHECKS, fx)
     report.extend(f_lines)
     ok = ok and f_ok
@@ -385,6 +388,7 @@ class _SourceCtx:
     mention_labels: object = None
     mention_export: object = None
     mention_waived: object = None
+    mention_inventory: object = None
 
 
 
@@ -472,7 +476,9 @@ def _rc_tagged_mentions(fx: "_SourceCtx") -> Tuple[List[str], bool]:
         waived: List[Tuple[str, str]] = []
         tm_report, _ = check_target_mentions(card_text, main_file,
                                              docs_root, fx.mention_tags or frozenset(), found,
-                                             fx.mention_export, waived)
+                                             fx.mention_export, waived,
+                                             inventory_rows=fx.mention_inventory,
+                                             page_cards=_page_artifact_index(docs_root))
         report.extend(tm_report)
         try:
             rel = main_file.resolve().relative_to(docs_root.resolve()).as_posix()

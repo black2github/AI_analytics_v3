@@ -237,7 +237,8 @@ def _run(files: List[Path], src: Optional[Path],
          mention_tags: frozenset = frozenset(),
          mention_labels: Optional[list] = None,
          mention_export=None,
-         mention_waived: Optional[list] = None) -> Tuple[List[str], bool]:
+         mention_waived: Optional[list] = None,
+         mention_inventory: Optional[dict] = None) -> Tuple[List[str], bool]:
     """outside_eco — слаги частей вне контура Экосистемы по разметке профиля и паспортам
     границы (outside_eco_slugs | passport_slugs): главная карточка в docs/srs/<слаг>/ получает
     признак части."""
@@ -255,7 +256,8 @@ def _run(files: List[Path], src: Optional[Path],
                                       mention_tags=mention_tags,
                                       mention_labels=mention_labels,
                                       mention_export=mention_export,
-                                      mention_waived=mention_waived))
+                                      mention_waived=mention_waived,
+                                      mention_inventory=mention_inventory))
 
 
 def run(docs: Path, sources: Optional[Path],
@@ -287,6 +289,18 @@ def run(docs: Path, sources: Optional[Path],
         return _run_impl(docs, sources, strict, catalog, raw, introduced, include_nested, bundle,
                          allow_sibling_docs=allow_sibling_docs, inventory=inventory, kit=kit,
                          kit_note=kit_note)
+
+
+def _mention_inventory(inv: Optional[Path]) -> Optional[Dict[str, Tuple[str, bool, str]]]:
+    """Страницы описи для сторожа упоминаний целей (постановка 2026-11-18): page_id → (title,
+    снята с миграции, основание). Колонки — по заголовку (sc.read_inventory); «снята» — класс
+    строки описи «снято с миграции» по классификатору покрытия (sc.row_class), и только он.
+    Описи нет — None: длинные названия только из выгрузки, снятия по описи нет."""
+    if inv is None or not inv.is_file():
+        return None
+    rows = sc.read_inventory(inv)
+    return {pid: (row.get("title", ""), sc.row_class(row) == sc.WITHDRAWN, row.get("basis", ""))
+            for pid, row in rows.items()}
 
 
 def _load_raw_oracle(bundle: Optional[Path]):
@@ -380,6 +394,8 @@ def _run_impl(docs: Path, sources: Optional[Path],
     # подписи, собственные страницы, долги по префиксу, чужие места «Где используется» — строки i
     m_export = source_mention_index(sources) if sources is not None else None
     m_waived: List[Tuple[str, str, str]] = []
+    m_inv = _mention_inventory(inventory if inventory is not None
+                               else _fs.find_kit_file(docs, "inventory.md"))
     if sources is not None:
         idx, dups = index_sources(sources)
         if any(d.is_dir() for d in sources.rglob("raw")):
@@ -572,7 +588,8 @@ def _run_impl(docs: Path, sources: Optional[Path],
                        allow_sibling_docs=allow_sibling_docs,
                        without_sources=sources is None, inventory=inventory,
                        outside_eco=eco_out, mention_tags=m_tags, mention_labels=m_labels,
-                       mention_export=m_export, mention_waived=m_waived)
+                       mention_export=m_export, mention_waived=m_waived,
+                       mention_inventory=m_inv)
         mark = "✓" if ok else "✗"
         counts[mark] += 1
         if any(is_examples_signal(ln) for ln in rep):
@@ -646,7 +663,8 @@ def _run_impl(docs: Path, sources: Optional[Path],
                        allow_sibling_docs=allow_sibling_docs, inventory=inventory,
                        group_extra=group_extra or None, outside_eco=eco_out,
                        mention_tags=m_tags, mention_labels=m_labels,
-                       mention_export=m_export, mention_waived=m_waived)
+                       mention_export=m_export, mention_waived=m_waived,
+                       mention_inventory=m_inv)
         if any(is_examples_signal(ln) for ln in rep):
             ex_files.add(files[0])
         # макеты Figma группы (решение 2026-08-31, модель README/main):
@@ -674,7 +692,8 @@ def _run_impl(docs: Path, sources: Optional[Path],
                              pardon_src=src,
                              allow_sibling_docs=allow_sibling_docs, inventory=inventory,
                              outside_eco=eco_out, mention_tags=m_tags, mention_labels=m_labels,
-                       mention_export=m_export, mention_waived=m_waived)
+                       mention_export=m_export, mention_waived=m_waived,
+                       mention_inventory=m_inv)
             rep = rep + [f"[{extra.name}] {ln}" for ln in rep2]
             ok = ok and ok2
             if any(is_examples_signal(ln) for ln in rep2):
@@ -1187,6 +1206,8 @@ _WAIVED_KINDS = (
     ("debt-prefix", "упоминания целей, засчитанные долгом матрицы по префиксу имени («[тег] "
                     "имя» в «…», имя не короче двух слов; сторож не отделяет имя от следующего "
                     "текста — сверить, что долг о той же странице)"),
+    ("out-of-srs", "упоминания страниц, снятых с миграции по описи — название страницы "
+                   "продолжает титул карточки комплекта, цели нет по решению (основание — из описи)"),
     ("src-label", "теговые упоминания источника с тегом-подписью в карточке не требуются (тег "
                   "встречается в выгрузке, но не открывает ни титула, ни текста ссылки)"),
     ("foreign-place", "чужие места зоны «Где используется» источника карточки вызова в карточке "

@@ -300,32 +300,43 @@ def base_contract_id(row: Dict[str, str]) -> str:
     return m.group(1).upper() if m else ""
 
 
+def row_class(row: Dict[str, str]) -> str:
+    """Класс страницы по одной строке описи — часть classify, которая читает только колонки
+    строки (заморожено, контейнеры, снято с миграции, базовый контракт, справочные); "" — ни
+    один признак строки не совпал (дальше classify судит файл выгрузки и план). Отдельно —
+    для сторожа упоминаний целей самопроверки (страница, снятая с миграции, — цели нет)."""
+    target, basis = row.get("target", ""), row.get("basis", "")
+    # явный идентификатор сильнее слова в рассказе (постановка 2026-11-09, П-5; КК
+    # SVFE-002/003: основание «метка «заморожено GBO-70412» — наследие 05.10» при
+    # base_contract_id уводило строку в «заморожено»). «Заморожено» в целевом типе, типе
+    # требований и родителе — классификация, действует всегда; в основании — только когда
+    # идентификатора базового контракта нет
+    bc_id = base_contract_id(row)
+    if (_FROZEN_RE.search(target) or (not bc_id and _FROZEN_RE.search(basis))
+            or _FROZEN_RE.search(row.get("req_type", ""))
+            or _FROZEN_PARENT_RE.search(row.get("parent", ""))):
+        return FROZEN
+    if (_CONTAINER_TARGET_RE.search(target) or _CONTAINER_RE.search(basis)
+            or _CONTAINER_RE.search(target)):
+        return CONTAINER
+    if (_WITHDRAWN_RE.search(f"{target} {basis}")
+            or _WITHDRAWN_MARK_RE.search(f"{row.get('title', '')} {basis}")):
+        return WITHDRAWN
+    if bc_id:
+        return BASE_CONTRACT
+    if _REFERENCE_TARGET_RE.search(target) or _REFERENCE_RE.search(f"{target} {basis}"):
+        return REFERENCE
+    return ""
+
+
 def classify(pid: str, path: Path, inv: Dict[str, Dict[str, str]],
              slugs: Set[str], plan_text: str) -> str:
     """Класс непокрытой страницы (закрытый перечень CLASS_ORDER)."""
     row = inv.get(pid)
     if row is not None:
-        target, basis = row.get("target", ""), row.get("basis", "")
-        # явный идентификатор сильнее слова в рассказе (постановка 2026-11-09, П-5; КК
-        # SVFE-002/003: основание «метка «заморожено GBO-70412» — наследие 05.10» при
-        # base_contract_id уводило строку в «заморожено»). «Заморожено» в целевом типе, типе
-        # требований и родителе — классификация, действует всегда; в основании — только когда
-        # идентификатора базового контракта нет
-        bc_id = base_contract_id(row)
-        if (_FROZEN_RE.search(target) or (not bc_id and _FROZEN_RE.search(basis))
-                or _FROZEN_RE.search(row.get("req_type", ""))
-                or _FROZEN_PARENT_RE.search(row.get("parent", ""))):
-            return FROZEN
-        if (_CONTAINER_TARGET_RE.search(target) or _CONTAINER_RE.search(basis)
-                or _CONTAINER_RE.search(target)):
-            return CONTAINER
-        if (_WITHDRAWN_RE.search(f"{target} {basis}")
-                or _WITHDRAWN_MARK_RE.search(f"{row.get('title', '')} {basis}")):
-            return WITHDRAWN
-        if base_contract_id(row):
-            return BASE_CONTRACT
-        if _REFERENCE_TARGET_RE.search(target) or _REFERENCE_RE.search(f"{target} {basis}"):
-            return REFERENCE
+        rc = row_class(row)
+        if rc:
+            return rc
     if _attachment_only(path):
         return BINARY
     if row is None:

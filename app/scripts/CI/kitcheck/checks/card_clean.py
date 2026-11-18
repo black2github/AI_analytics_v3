@@ -3,6 +3,7 @@
 
 Перенесено из `normalize_tables.py` дословно (Д-50, 2026-10-30); `normalize_tables`
 сохраняет прежние имена (переходный реэкспорт на один релиз)."""
+import functools
 import html as _html
 from pathlib import Path
 import re
@@ -650,11 +651,128 @@ def _label_line(card_text: str, tag: str, core: str) -> int:
     return 0
 
 
+@functools.lru_cache(maxsize=None)
+def _title_pattern(title: str) -> "re.Pattern":
+    """Титул в тексте: слова через любые пробелы и переносы, регистр не различается."""
+    return re.compile(r"\s+".join(re.escape(w) for w in title.split()), re.I)
+
+
+def _existing_card_warn(title: str, cnt: int, rel: str) -> str:
+    return (f"предупреждение: имя существующей карточки без ссылки — "
+            f"«{title[:70]}» ×{cnt} → {rel} (упоминание оформляется "
+            "markdown-ссылкой на карточку; ссылка НЕ конфликтует со "
+            "сторожем теговых упоминаний — дефейс только у слов без "
+            "тега ВНЕ ссылки)")
+
+
+def _card_pids(card_text: str) -> List[str]:
+    """Номера страниц confluence_page_ids шапки карточки (любая позиция)."""
+    m = _CONFLUENCE_IDS_RE.search(_fm_head(card_text) or "")
+    return re.findall(r"\d{5,}", m.group(1)) if m else []
+
+
+_LONGER_CACHE: Dict[str, tuple] = {}
+
+
+def _longer_page_names(docs_root: Path, titles: List[Tuple[str, str]], export,
+                       inventory_rows) -> Dict[str, List[Tuple[str, Tuple[str, ...]]]]:
+    """Нормализованный титул карточки → [(название страницы, номера страниц)]: названия страниц
+    выгрузки (export.page_titles) и описи (колонка title), которые длиннее титула и начинаются
+    с него (регистр и пробелы не различаются); длинное раньше короткого. Без выгрузки и описи —
+    пусто. Кэш на прогон: указатели выгрузки и описи — те же объекты для всех карточек."""
+    if export is None and not inventory_rows:
+        return {}
+    key = str(docs_root.resolve())
+    hit = _LONGER_CACHE.get(key)
+    # опись приходит копией кэша (_fs.memoize(copy=dict)) — сравнение по значению
+    if hit is not None and hit[0] is export and hit[1] == inventory_rows and hit[2] == len(titles):
+        return hit[3]
+    names: Dict[str, Tuple[str, List[str]]] = {}
+    pairs = list(export.page_titles.items()) if export is not None else []
+    pairs += [(pid, row[0]) for pid, row in (inventory_rows or {}).items()]
+    for pid, name in pairs:
+        disp = re.sub(r"\s+", " ", name).strip()
+        k = _norm_ws(disp)
+        if not k:
+            continue
+        ent = names.setdefault(k, (disp, []))
+        if pid not in ent[1]:
+            ent[1].append(pid)
+    card_keys = {_norm_ws(t) for t, _r in titles}
+    out: Dict[str, List[Tuple[str, Tuple[str, ...]]]] = {}
+    for k, (disp, pids) in names.items():
+        for i in range(1, len(k)):
+            if k[:i] in card_keys:
+                out.setdefault(k[:i], []).append((disp, tuple(pids)))
+    for v in out.values():
+        v.sort(key=lambda x: -len(x[0]))
+    _LONGER_CACHE[key] = (export, inventory_rows, len(titles), out)
+    return out
+
+
+def _docs_page_cards(docs_root: Path) -> Dict[str, List[str]]:
+    """page_id → отн. пути карточек комплекта, у которых он стоит в confluence_page_ids в любой
+    позиции. Запасной указатель, когда вызывающий не передал свой (card_run передаёт
+    _page_artifact_index)."""
+    out: Dict[str, List[str]] = {}
+    for p in sorted(docs_root.rglob("*.md")):
+        try:
+            text = _fs.read_text(p, encoding="utf-8", errors="replace")
+        except OSError:
+            continue
+        for pid in _card_pids(text):
+            out.setdefault(pid, []).append(str(p.relative_to(docs_root)).replace("\\", "/"))
+    return out
+
+
+def _long_name_fate(lname: str, pids: Tuple[str, ...], self_pids: frozenset, rel: str,
+                    page_cards, docs_root: Path, inventory_rows, mtext: str) -> Tuple[str, str]:
+    """Судьба более длинного названия страницы — по номеру страницы, в этом порядке:
+    own — страница проверяемой карточки (строка i прежнего вида);
+    same — страница карточки короткого титула (как прежде: «имя существующей карточки» → она);
+    other — страница другой карточки («имя существующей карточки» с полным названием → она);
+    out-of-srs — карточки нет, страница снята с миграции по описи — класс «снято с миграции»
+      source_coverage, и только он (строка i с основанием; раньше следа в матрице — решение о
+      снятии видно в отчёте); прочие классы без карточки (заморожено, базовый контракт,
+      контейнеры, справочные) судятся дальше: у них цель или долг есть;
+    debt — карточки нет, в матрице полное название (с тегом или без) или номер страницы —
+      засчитано молча, как в части (б); игла из трёх слов здесь не годится: она находит имя
+      короткой карточки;
+    warn — ничего из этого: предупреждение части (б) с полным названием."""
+    if self_pids & set(pids):
+        return "own", lname[:70]
+    cards: List[str] = []
+    for pid in pids:
+        for c in (page_cards or {}).get(pid, ()):
+            if isinstance(c, Path):
+                try:
+                    c = c.resolve().relative_to(docs_root.resolve()).as_posix()
+                except (OSError, ValueError):
+                    c = c.as_posix()
+            if c not in cards:
+                cards.append(c)
+    if rel in cards:
+        return "same", rel
+    if cards:
+        return "other", sorted(cards)[0]
+    for pid in pids:
+        row = (inventory_rows or {}).get(pid)
+        if row and row[1]:
+            return "out-of-srs", f"{lname[:70]}" + (f" ← {row[2][:100]}" if row[2] else "")
+    core = re.sub(r"^\[[^\]]+\]\s*", "", lname)
+    if (_norm_ws(core) in mtext or _norm_ws(lname) in mtext
+            or any(re.search(r"(?<!\d)" + pid + r"(?!\d)", mtext) for pid in pids)):
+        return "debt", ""
+    return "warn", ""
+
+
 def check_target_mentions(card_text: str, md_path: Path,
                           docs_root: Path, source_tags: frozenset = frozenset(),
                           labels: Optional[List[Tuple[str, int, str]]] = None,
                           export=None,
-                          waived: Optional[List[Tuple[str, str]]] = None
+                          waived: Optional[List[Tuple[str, str]]] = None,
+                          inventory_rows: Optional[Dict[str, Tuple[str, bool, str]]] = None,
+                          page_cards: Optional[Dict[str, List[Path]]] = None
                           ) -> Tuple[List[str], bool]:
     """Софт-сторож: теговые упоминания целей вне markdown-ссылок.
     Существующая карточка → «оформить ссылкой»; неизвестная цель без
@@ -674,7 +792,16 @@ def check_target_mentions(card_text: str, md_path: Path,
     - собственная страница (класс 2): упоминание называет титул страницы из confluence_page_ids
       шапки карточки — не цель (waived «own»);
     - долг по префиксу (класс 3): матрица несёт «[тег] имя» в «…», где имя — префикс ядра не
-      короче двух слов, — след засчитан (waived «debt-prefix»)."""
+      короче двух слов, — след засчитан (waived «debt-prefix»).
+
+    Постановка 2026-11-18 (приёмка «Точек» 18.11): титул карточки внутри более длинного названия
+    страницы. inventory_rows — страницы описи page_id → (title, снята с миграции, основание):
+    признак снятия — класс страницы по source_coverage.row_class (строит selfcheck),
+    page_cards — page_id → карточки, у которых он стоит в confluence_page_ids в любой позиции.
+    Если текст в месте вхождения титула продолжается до более длинного названия страницы
+    выгрузки или описи, это упоминание той страницы, не карточки: название вычёркивается целиком,
+    титул не засчитывается, судьба — по номеру страницы (_long_name_fate). Без выгрузки и описи
+    длинных названий нет — поведение прежнее."""
     body = _fm_body(card_text)
     body = re.sub(r"<!--.*?-->", " ", body, flags=re.S)
     body = _blank_md_links(body)
@@ -690,36 +817,64 @@ def check_target_mentions(card_text: str, md_path: Path,
     # протаскивало хвост упоминания через заголовки соседних разделов);
     # титулы поперёк переносов ловятся паттерном с \s+ между словами
     flat = body
-    titles = sorted(_docs_card_titles(docs_root),
-                    key=lambda t: -len(t[0]))  # длинный титул раньше:
-    # вложенный короткий не двоит счёт (вычёркивание по месту)
-    for title, rel in titles:
-        if rel == self_rel:
-            continue
-        pat = re.compile(
-            r"\s+".join(re.escape(w) for w in title.split()), re.I)
-        cnt = 0
-        m = pat.search(flat)
-        while m:
-            cnt += 1
-            flat = (flat[:m.start()] + " " * (m.end() - m.start())
-                    + flat[m.end():])
-            m = pat.search(flat)
-        if cnt:
-            warns.append(
-                f"предупреждение: имя существующей карточки без ссылки — "
-                f"«{title[:70]}» ×{cnt} → {rel} (упоминание оформляется "
-                "markdown-ссылкой на карточку; ссылка НЕ конфликтует со "
-                "сторожем теговых упоминаний — дефейс только у слов без "
-                "тега ВНЕ ссылки)")
-    # (б) остальные теговые упоминания: след в матрице обязателен
     matrix = docs_root / "traceability-matrix.md"
     try:
         mtext = _norm_ws(_fs.read_text(matrix, encoding="utf-8",
                                           errors="replace"))
     except OSError:
         mtext = ""
+    titles = sorted(_docs_card_titles(docs_root),
+                    key=lambda t: -len(t[0]))  # длинный титул раньше:
+    # вложенный короткий не двоит счёт (вычёркивание по месту)
+    longer = _longer_page_names(docs_root, titles, export, inventory_rows)
+    if longer and page_cards is None:
+        page_cards = _docs_page_cards(docs_root)
+    self_pids = frozenset(_card_pids(card_text))
+    other_cnt: Dict[Tuple[str, str], int] = {}
+    long_seen: Dict[str, int] = {}
+    for title, rel in titles:
+        if rel == self_rel:
+            continue
+        pat = _title_pattern(title)
+        cands = longer.get(_norm_ws(title), ())
+        cnt = 0
+        m = pat.search(flat)
+        while m:
+            start, end = m.start(), m.end()
+            hit = None
+            for lname, pids in cands:
+                lm = _title_pattern(lname).match(flat, start)
+                if lm:
+                    hit, end = (lname, pids), lm.end()
+                    break
+            if hit is None:
+                cnt += 1
+            else:
+                fate, arg = _long_name_fate(hit[0], hit[1], self_pids, rel,
+                                            page_cards, docs_root, inventory_rows, mtext)
+                if fate == "same":
+                    # как прежде целиком: засчёт титулу и вычёркивание только титула (хвост
+                    # названия после титула судится частью (б), как до правки)
+                    cnt += 1
+                    end = m.end()
+                elif fate == "other":
+                    other_cnt[(hit[0], arg)] = other_cnt.get((hit[0], arg), 0) + 1
+                elif fate in ("own", "out-of-srs"):
+                    if waived is not None:
+                        waived.append((fate, arg))
+                elif fate == "warn":
+                    long_seen[hit[0]] = long_seen.get(hit[0], 0) + 1
+                # fate == "debt": след в матрице засчитан молча, как в части (б)
+            flat = flat[:start] + " " * (end - start) + flat[end:]
+            m = pat.search(flat)
+        if cnt:
+            warns.append(_existing_card_warn(title, cnt, rel))
+    for (lname, rel), cnt in sorted(other_cnt.items()):
+        warns.append(_existing_card_warn(lname, cnt, rel))
+    # (б) остальные теговые упоминания: след в матрице обязателен
     seen: Dict[str, Tuple[str, int]] = {}
+    for lname, cnt in sorted(long_seen.items()):
+        seen["\x00" + lname] = (lname[:70], cnt)
     known_tags = kit_title_tags(docs_root) | frozenset(source_tags)
     own_titles = _own_titles(card_text, export)
     for m in _MENTION_TAG_RE.finditer(flat):
