@@ -1672,6 +1672,8 @@ def source_role_literals(source_text: str) -> Dict[str, set]:
 # короче трёх слов дословным не считается. Номера
 # страниц (page_id, «page N») — брак всегда. Без выгрузки — как прежде.
 _SOURCE_REF_RE = re.compile(r"(?i)confluence|page[ _]?id|page\s+\d{6,}")
+# имя в угловых скобках, записанное в источнике текстом (&lt;item&gt;), — сегмент пути (класс В)
+_ANGLE_SRC_RE = re.compile(r"&lt;([A-Za-z_][\w.-]*)&gt;")
 _SENT_BOUND_RE = re.compile(r"(?<=[.!?;])\s+|\n|<br\s*/?>|\|", re.I)
 
 
@@ -1788,8 +1790,12 @@ def _fc_source_page_refs_and_columns(fx: "_FileCtx") -> Tuple[List[str], bool]:
                 f"таблица {i}: шапка выглядит строкой данных ({h0[:40]!r}) "
                 f"— хвост разорванной таблицы ✗ НИЖЕ ПОРОГА")
             continue
+        # класс В (постановка 2026-11-18): сегменты <имя>, стоящие в тексте источника как
+        # &lt;имя&gt;, — часть пути; без источника — как прежде
+        angle = (set(_ANGLE_SRC_RE.findall((fx.source_text or "") + "\n" + (fx.amnesty_text or "")))
+                 if path_index is not None else None)
         cols = validate_columns(headers, rows, path_index=path_index,
-                                source_literals=src_literals)
+                                source_literals=src_literals, angle_segments=angle or None)
         if not cols:
             report.append(f"таблица {i} ({len(rows)} строк): ролей не распознано — пропущена")
             continue
@@ -1803,6 +1809,11 @@ def _fc_source_page_refs_and_columns(fx: "_FileCtx") -> Tuple[List[str], bool]:
                 ok = False
                 for s in col["samples"]:
                     report.append(f"      пример брака: {s[:80]!r}")
+            if col.get("angle_paths"):
+                report.append(
+                    f"i сегменты пути в угловых скобках дословно из источника (таблица {i}, "
+                    f"колонка «{col['column'][:28]}»): {col['angle_paths']} путей ("
+                    + ", ".join(f"<{x}>" for x in col["angle_names"]) + ")")
             if col.get("pardoned_count"):
                 report.append(
                     f"      вне словаря роли, но дословно из источника — "

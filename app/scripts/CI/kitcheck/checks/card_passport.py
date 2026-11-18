@@ -49,13 +49,13 @@ _HEAVY_LEN = 600
 _HEAVY_BLOCKS = 3
 
 
-def heavy_source_cells(src_text: str) -> List[str]:
+def heavy_source_pairs(src_text: str) -> List[Tuple[str, str]]:
     """Тяжёлые ЗНАЧЕНИЯ ПАР «лейбл → значение»: строка <tr> ровно из
     двух ячеек (паспорт и подобные), второе — структурное/длинное.
     Ячейки многоколонных таблиц ДАННЫХ (описания параметров) легитимно
     живут в строках карточек и не собираются (боевой контроль: 26
     флагов первой версии — ложняки на колонках «Описание»)."""
-    out: List[str] = []
+    out: List[Tuple[str, str]] = []
     for m in re.finditer(
             r"<tr[^>]*>\s*<t[hd][^>]*>((?:(?!</?t[dr]).)*?)</t[hd]>\s*"
             r"<td([^>]*)>((?:(?!</td>).)*)</td>\s*</tr>",
@@ -81,8 +81,39 @@ def heavy_source_cells(src_text: str) -> List[str]:
         blocks = len(re.findall(r"<(?:p|ul|ol)\b", cell))
         if ("<ul" in cell or "<ol" in cell or len(cell) > _HEAVY_LEN
                 or blocks >= _HEAVY_BLOCKS):
-            out.append(cell)
+            out.append((label, cell))
     return out
+
+
+def heavy_source_cells(src_text: str) -> List[str]:
+    """Тяжёлые значения пар без лейблов (см. heavy_source_pairs)."""
+    return [c for _l, c in heavy_source_pairs(src_text)]
+
+
+def _pair_label(label_html: str) -> str:
+    lbl = re.sub(r"\s+", " ", html.unescape(re.sub(r"<[^>]+>", " ", label_html))).strip()
+    return lbl.strip(":").strip()
+
+
+def _flat_lines(text: str) -> str:
+    """Все строки текста (и таблиц), нормализованные как пробы тяжёлой ячейки."""
+    out = []
+    for ln in text.splitlines():
+        t = _norm_cell(re.sub(r"^[ \t]*[-+*] ", "", re.sub(r"^[ \t]*(?:>[ \t]*)+", "", ln)))
+        if t:
+            out.append(t)
+    return " ".join(out)
+
+
+def _heavy_in_call(probes: List[str], call_texts: List[Tuple[str, str]]) -> str:
+    """Класс Б (постановка «Точек» 18.11, шаг 2.57 КК): все пробы тяжёлой ячейки стоят в одной
+    карточке вызова — содержимое потребителя вынесено по правилу границы (шаблон
+    contract-call.md, раздел A). Имя карточки или ""."""
+    for name, text in call_texts:
+        flat = _flat_lines(text)
+        if all(p in flat for p in probes):
+            return name
+    return ""
 
 
 def _table_widths(lines: List[str]) -> List[int]:
@@ -233,15 +264,24 @@ def _drop_foreign_items(cell: str, own: str) -> Tuple[str, int]:
 
 def check_heavy_pair_structure(card_text: str,
                                src_text: str,
-                               own_contour: str = "") -> Tuple[List[str], bool]:
+                               own_contour: str = "",
+                               call_texts: Optional[List[Tuple[str, str]]] = None
+                               ) -> Tuple[List[str], bool]:
     """К-25d (обобщение): профиль КАЖДОЙ лейбл-секции тяжёлой пары
     (найденной по началу содержимого, лейбл безразличен) обязан
     начинаться профилем эталона конвертера — склейка абзацев в
     простыню видна как усечение профиля.
 
     own_contour — основа маркера сервиса (например «КК») у страницы-копии метода: пункты
-    списков с чужим маркером контура из эталона снимаются (i-строка с числом)."""
-    heavy = heavy_source_cells(src_text)
+    списков с чужим маркером контура из эталона снимаются (i-строка с числом).
+
+    call_texts — карточки вызова потребителей базового контракта (--call; постановка 2026-11-18,
+    класс Б): ячейка, ни одна проба которой не найдена в контракте, а все пробы стоят в одной
+    карточке вызова, — i-строка с лейблом и именем карточки вместо ✗. Частичное вхождение —
+    как прежде. Список лейблов не ведётся: признак — содержимое."""
+    pairs = heavy_source_pairs(src_text)
+    heavy = [c for _l, c in pairs]
+    labels = [_pair_label(lb) for lb, _c in pairs]
     if not heavy:
         return [], True
     dropped = 0
@@ -277,10 +317,11 @@ def check_heavy_pair_structure(card_text: str,
     bad = 0
     sample = ""
     report_notes: List[str] = []
+    moved: List[Tuple[str, str]] = []
     if dropped:
         report_notes.append(f"i чужие точки вызова страницы-копии: {dropped} снято (Р-1) — пункты "
                             "с маркером контура не этого сервиса в карточке не требуются")
-    for cell in heavy:
+    for hi, cell in enumerate(heavy):
         md = html_fragment_to_markdown(cell)
         expected = _md_profile(md.splitlines())
         if len(expected) < 3:
@@ -324,6 +365,10 @@ def check_heavy_pair_structure(card_text: str,
                                       for ln in lines
                                       if ln.lstrip().startswith("|")))
             if not in_table:
+                moved_to = _heavy_in_call(probes, call_texts) if call_texts else ""
+                if moved_to:
+                    moved.append((labels[hi], moved_to))
+                    continue
                 bad += 1
                 sample = probes[0]
             continue
@@ -364,6 +409,11 @@ def check_heavy_pair_structure(card_text: str,
         if not matched:
             bad += 1
             sample = probes[0]
+    if moved:
+        report_notes.append(
+            f"i тяжёлая ячейка паспорта — в карточке вызова: {len(moved)} — "
+            + "; ".join(f"«{lb}» ({n})" for lb, n in moved)
+            + " (в контракте ни одной пробы, в карточке все; шаблон contract-call, раздел A)")
     if bad:
         return (report_notes
                 + [f"содержимое/структура тяжёлых пар расходится с "

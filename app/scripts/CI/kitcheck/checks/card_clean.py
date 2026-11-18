@@ -3,6 +3,7 @@
 
 Перенесено из `normalize_tables.py` дословно (Д-50, 2026-10-30); `normalize_tables`
 сохраняет прежние имена (переходный реэкспорт на один релиз)."""
+import html as _html
 from pathlib import Path
 import re
 from typing import Dict, List, Optional, Tuple
@@ -918,10 +919,56 @@ def source_tag_mentions(src_text: str) -> Dict[str, str]:
     return mentions
 
 
+_SEP_ROW_RE = re.compile(r"^\|[\s:|-]+\|?$")
+
+
+def _md_cells_norm(text: str) -> List[str]:
+    """Ячейки pipe-таблиц текста, нормализованные как упоминания (без обрамляющих `)."""
+    out: List[str] = []
+    for ln in text.splitlines():
+        s = ln.strip()
+        if s.startswith("|") and not _SEP_ROW_RE.match(s):
+            out += [_norm_ws(_np(c.strip().strip("`").strip())) for c in s.strip("|").split("|")]
+    return out
+
+
+def _src_cells_norm(src_text: str) -> set:
+    """Целые ячейки источника — HTML-таблиц (<td>/<th>) и pipe-таблиц — без разметки."""
+    cells = {_norm_ws(_np(_html.unescape(re.sub(r"<[^>]+>", " ", m))))
+             for m in re.findall(r"<t[dh]\b[^>]*>(.*?)</t[dh]>", src_text, re.S | re.I)}
+    return cells | set(_md_cells_norm(src_text))
+
+
+def _owner_name_cells(card_text: str, src_text: str, needle: str, tagged: str,
+                      call_texts: List[Tuple[str, str]]) -> str:
+    """Класс А (постановка «Точек» 18.11, шаг 2.57 КК): у базового контракта с --call слова
+    тегового упоминания без тега — имя параметра владельца, а не дефейс, если одновременно:
+    «[тег] игла» стоит в одной из карточек вызова; каждое голое вхождение иглы в контракте —
+    целая ячейка таблицы (ячейка начинается иглой); в источнике есть такая же целая ячейка без
+    тега. Возвращает имя карточки вызова или "" (дефейс судится как прежде). Граница: тег, снятый
+    в целой ячейке при такой же голой ячейке источника, не виден."""
+    hit = next((name for name, t in call_texts
+                if tagged in _norm_ws(_np(_blank_md_links(t)))
+                or tagged in _norm_ws(_np(_md_link_texts(t)))), "")
+    if not hit:
+        return ""
+    blank = _blank_md_links(card_text)
+    body = _norm_ws(_np(blank))
+    bare = body.count(needle) - body.count(tagged)
+    cells = [c for c in _md_cells_norm(blank) if needle in c]
+    if bare <= 0 or sum(c.count(needle) for c in cells) != bare:
+        return ""
+    src_cells = _src_cells_norm(src_text)
+    if not all(c.startswith(needle) and c in src_cells for c in cells):
+        return ""
+    return hit
+
+
 def check_source_tag_mentions(card_text: str, src_text: str,
                               docs_root: Optional[Path] = None,
                               export=None,
-                              waived: Optional[List[Tuple[str, str]]] = None
+                              waived: Optional[List[Tuple[str, str]]] = None,
+                              call_texts: Optional[List[Tuple[str, str]]] = None
                               ) -> Tuple[List[str], bool]:
     """К-32: каждое теговое упоминание источника — в карточке с тегом
     или ссылкой; слова без тега вне ссылки = дефейс (✗), отсутствие —
@@ -950,7 +997,11 @@ def check_source_tag_mentions(card_text: str, src_text: str,
       используется» источника с тегом, который не открывает ни одного титула карточек
       комплекта (чужой сервис), не требуется — waived «foreign-place». Свои места зоны и чужие
       упоминания вне зоны требуются по-прежнему.
-    Дефейс (✗) судится как прежде."""
+    Дефейс (✗) судится как прежде.
+
+    Постановка 2026-11-18 (класс А, шаг 2.57 КК): у базового контракта с карточками вызова
+    (call_texts, ключ --call) голые слова — имя параметра владельца целыми ячейками, упоминание
+    с тегом — в карточке вызова (_owner_name_cells): строка i вместо дефейса."""
     mentions = source_tag_mentions(src_text)
     if not mentions:
         return [], True
@@ -969,6 +1020,7 @@ def check_source_tag_mentions(card_text: str, src_text: str,
                     if docs_root is not None else [])
     report: List[str] = []
     ok = True
+    owner_names: List[Tuple[str, str]] = []
     for needle, shown in sorted(mentions.items()):
         if any(_norm_ws(t.split("]", 1)[-1]).startswith(needle)
                and r.rsplit("/", 1)[-1] in linked_names
@@ -984,6 +1036,11 @@ def check_source_tag_mentions(card_text: str, src_text: str,
         if _starts_in_link(tagged, tails) or _starts_in_link(needle, tails, stag):
             continue  # имя в ссылке, продолжение — за её границей
         if needle in card_nolinks:
+            moved_to = (_owner_name_cells(card_text, src_text, needle, tagged, call_texts)
+                        if call_texts else "")
+            if moved_to:
+                owner_names.append((shown.strip(), moved_to))
+                continue
             ok = False
             report.append(
                 f"К-32 дефейс тегового упоминания источника: «{shown}» — "
@@ -1001,6 +1058,11 @@ def check_source_tag_mentions(card_text: str, src_text: str,
                 f"предупреждение: теговое упоминание источника «{shown}» "
                 "в карточке не найдено — если зона переносилась, "
                 "упоминание обязано сохраниться (тег/ссылка)")
+    if owner_names:
+        report.append(
+            f"i теговые упоминания потребителя — в карточке вызова, в контракте имя параметра "
+            f"владельца целыми ячейками: {len(owner_names)} — "
+            + "; ".join(f"«{s}» ({n})" for s, n in owner_names[:4]))
     return report, ok
 
 

@@ -895,7 +895,8 @@ def _rc_source_comparison(fx: "_SourceCtx") -> Tuple[List[str], bool]:
         # теги удалялись, чтобы увести упоминания от сторожа)
         sm_waived: List[Tuple[str, str]] = []
         sm_report, sm_ok = check_source_tag_mentions(combined, src_text,
-                                                     docs_root, fx.mention_export, sm_waived)
+                                                     docs_root, fx.mention_export, sm_waived,
+                                                     call_texts=call_texts)
         if sm_waived and fx.mention_waived is not None:
             try:
                 sm_rel = main_file.resolve().relative_to(docs_root.resolve()).as_posix()
@@ -925,7 +926,8 @@ def _rc_source_comparison(fx: "_SourceCtx") -> Tuple[List[str], bool]:
         # К-25d: профили вынесенных лейбл-секций против эталона
         if not holder_base:
             hp_report, hp_ok = check_heavy_pair_structure(
-                combined, src_text, own_contour=_copy_method_page_contour(src_text, docs_root, fx.inventory))
+                combined, src_text, own_contour=_copy_method_page_contour(src_text, docs_root, fx.inventory),
+                call_texts=call_texts)
             report.extend(hp_report)
             ok = ok and hp_ok
         # К-26: по-шаговая структура тел (типы с поведением)

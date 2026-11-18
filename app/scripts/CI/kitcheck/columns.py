@@ -4,6 +4,7 @@
 
 Перенесено из `normalize_tables.py` дословно (Д-50, 2026-10-30); `normalize_tables`
 сохраняет прежние имена."""
+import html as _stdhtml
 import re
 from typing import Dict, List, Optional, Tuple
 from .html import _BR_RE, _norm_cell, _plain, _title_key
@@ -215,6 +216,20 @@ def _looks_like_path(v: str) -> bool:
     return bool(_PATH_RE.match(v.replace(" ", "")))
 
 
+# сегмент пути в угловых скобках — безымянный элемент массива («…/PostAddr/<item>/Type»),
+# дословно из источника (постановка «Точек» 18.11, класс В, ESK-016 КК)
+_ANGLE_SEG_RE = re.compile(r"<([A-Za-z_][\w.-]*)>")
+
+
+def _angle_path(v: str, allowed) -> bool:
+    """Путь с сегментами <имя>: каждый сегмент — из allowed (стоит в тексте источника как
+    &lt;имя&gt;), путь без угловых скобок проходит _looks_like_path."""
+    s = _stdhtml.unescape(v)
+    segs = _ANGLE_SEG_RE.findall(s)
+    return bool(segs) and all(x in allowed for x in segs) and _looks_like_path(
+        _ANGLE_SEG_RE.sub(r"\1", s))
+
+
 _XML_PATHISH_RE = re.compile(r"^[A-Za-z0-9_*/\[\]@.:#-]+$")
 
 
@@ -324,7 +339,8 @@ def _is_section_row(row: List[str]) -> bool:
 def validate_columns(headers: List[str], rows: List[List[str]],
                      path_index: Optional[int] = 0,
                      source_literals: Optional[Dict[str, set]] = None,
-                     source_mode: bool = False) -> List[dict]:
+                     source_mode: bool = False,
+                     angle_segments: Optional[set] = None) -> List[dict]:
     """Проверка СМЫСЛА колонок (инвариант строк её не заменяет — урок
     разжалования итерации 3): для каждой колонки с распознанной ролью считает
     долю валидных значений. Возвращает список отчётов по колонкам.
@@ -334,7 +350,10 @@ def validate_columns(headers: List[str], rows: List[List[str]],
     браком не считается — дословность переноса сильнее словаря (ложный БРАК
     жанра 3 file-storage, 2026-08-10: автор постановки написал «[1]» в
     колонке обязательности). Совпадение ищется ТОЛЬКО в колонке той же роли:
-    «[1] где-то в источнике» переписанную кратность не оправдывает."""
+    «[1] где-то в источнике» переписанную кратность не оправдывает.
+
+    angle_segments (имена сегментов <имя>, стоящих в тексте источника как &lt;имя&gt;): путь с
+    такими сегментами валиден (класс В, постановка 2026-11-18); без источника — как прежде."""
     report: List[dict] = []
     # сигнатура таблицы связей МД («Связь | Сущность | Кратность …»):
     # роль кратн допускает логическую нотацию «1 : N» (шаблон data-model);
@@ -351,6 +370,9 @@ def validate_columns(headers: List[str], rows: List[List[str]],
         role = None
         if path_index is not None and i == path_index:
             role, check = "путь", _looks_like_path
+            if angle_segments:
+                check = (lambda v, _a=angle_segments:
+                         _looks_like_path(v) or _angle_path(v, _a))
         elif obligation_title(title) == "pair":
             # комбинированная шапка «Обязательность / Уникальность»
             role, check = "обязат", _looks_like_obligation_pair
@@ -454,7 +476,13 @@ def validate_columns(headers: List[str], rows: List[List[str]],
         # ✗ как прежде.
         susp_pardoned = [v for v in suspicious if _in_wl(v)]
         suspicious = [v for v in suspicious if v not in susp_pardoned]
+        angle = ([r[i] for r in col_rows if i < len(r) and not _looks_like_path(r[i])
+                  and _angle_path(r[i], angle_segments)]
+                 if role == "путь" and angle_segments else [])
         report.append({
+            "angle_paths": len(angle),
+            "angle_names": sorted({x for v in angle
+                                   for x in _ANGLE_SEG_RE.findall(_stdhtml.unescape(v))}),
             "column": title, "role": role, "index": i,
             "bad": len(bad), "total": len(col_rows),
             "valid_pct": round(100 * (len(col_rows) - len(bad)) / total, 1),
