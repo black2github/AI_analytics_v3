@@ -17,6 +17,11 @@ from collections import defaultdict
 from datetime import date
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+# признак заглушки ЭФ — один дом с самопроверкой (шаблон screen-form: frontmatter + «Назначение» +
+# строка «Документ-заглушка: …»); FB-05 сервиса «Обновление сведений», 2026-11-18
+from kitcheck.checks.content import _STUB_MARK  # noqa: E402
+
 SCRIPT_REF = "_meta/tools/validate_screen_forms.py"
 
 FRONT_TYPE_RE = re.compile(r"^type:\s*screen-form\s*$", re.M)
@@ -67,7 +72,13 @@ def collect_scr_files(docs_roots: list[Path]) -> list[tuple[Path, Path]]:
     return out
 
 
-def analyze_file(path: Path, docs_root: Path) -> list[dict]:
+def is_stub(text: str) -> bool:
+    """Заглушка ЭФ по шаблону screen-form: строка «Документ-заглушка: …» (признак самопроверки)."""
+    return _STUB_MARK in text.lower()
+
+
+def analyze_file(path: Path, docs_root: Path, stubs: list[str] | None = None) -> list[dict]:
+    """Находки карточки; путь заглушки (is_stub) дописывается в ``stubs``."""
     text = path.read_text(encoding="utf-8", errors="replace")
     try:
         rel = str(path.relative_to(docs_root)).replace("\\", "/")
@@ -91,7 +102,24 @@ def analyze_file(path: Path, docs_root: Path) -> list[dict]:
             }
         )
 
-    if not SKILL_MARKERS_RE.search(text):
+    stub = is_stub(text)
+    if stub and stubs is not None:
+        stubs.append(rel)
+    # заглушка (FB-05, 2026-11-18): маркеры FLD-/EV-/B- не требуются — форма не описана по
+    # решению, а не потеряна; маркеры при строке-заглушке — противоречие, не блокер
+    if stub and SKILL_MARKERS_RE.search(text):
+        issues.append(
+            {
+                "file": rel,
+                "code": "stub_with_content",
+                "severity": "P1",
+                "detail": (
+                    "строка «Документ-заглушка» при содержимом формы (маркеры FLD- / EV- / B-) — "
+                    "снять строку или вынести содержимое"
+                ),
+            }
+        )
+    elif not stub and not SKILL_MARKERS_RE.search(text):
         issues.append(
             {
                 "file": rel,
@@ -131,8 +159,10 @@ def analyze_file(path: Path, docs_root: Path) -> list[dict]:
 
 
 def write_report(
-    out: Path, docs_roots: list[Path], issues: list[dict], file_count: int
+    out: Path, docs_roots: list[Path], issues: list[dict], file_count: int,
+    stubs: list[str] | None = None,
 ) -> None:
+    stubs = stubs or []
     by_sev: dict[str, list[dict]] = defaultdict(list)
     for i in issues:
         by_sev[i["severity"]].append(i)
@@ -155,9 +185,19 @@ def write_report(
         "| - | - |",
         f"| docs roots | {roots_str} |",
         f"| Карточек SCR (leaf) | {file_count} |",
+        f"| Заглушки | {len(stubs)} |",
         f"| P0 | {p0} |",
         f"| P1 | {p1} |",
         f"| Вердикт | {'PASS' if p0 == 0 else 'FAIL'} |",
+        "",
+        "## Заглушки",
+        "",
+        "Карточки со строкой «Документ-заглушка: …» (шаблон screen-form): маркеры FLD- / EV- / B- "
+        "не требуются.",
+        "",
+    ]
+    lines += [f"- `{s}`" for s in stubs] or ["- нет"]
+    lines += [
         "",
         "## Находки",
         "",
@@ -179,6 +219,8 @@ def write_report(
         "",
         "- **PASS** — leaf SCR в формате скилла (§1–§8, FLD/EV/B, без Confluence-path).",
         "- **FAIL** — dump или частичный reverse; требуется доработка карточек.",
+        "- **Заглушка** — карточка со строкой «Документ-заглушка: …»: маркеры FLD- / EV- / B- не "
+        "требуются; маркеры при строке-заглушке — P1 `stub_with_content`.",
         "",
     ]
     out.parent.mkdir(parents=True, exist_ok=True)
@@ -204,14 +246,15 @@ def main() -> int:
             return 1
     files = collect_scr_files(docs_roots)
     all_issues: list[dict] = []
+    stubs: list[str] = []
     for f, root in files:
-        all_issues.extend(analyze_file(f, root))
+        all_issues.extend(analyze_file(f, root, stubs))
 
     out = args.out
-    write_report(out, docs_roots, all_issues, len(files))
+    write_report(out, docs_roots, all_issues, len(files), stubs)
     p0 = sum(1 for i in all_issues if i["severity"] == "P0")
     print(
-        f"wrote {out}: files={len(files)} P0={p0} "
+        f"wrote {out}: files={len(files)} stubs={len(stubs)} P0={p0} "
         f"P1={sum(1 for i in all_issues if i['severity'] == 'P1')}"
     )
     return 2 if p0 else 0
