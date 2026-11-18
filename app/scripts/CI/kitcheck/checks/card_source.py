@@ -14,7 +14,7 @@ from ..html import (
 )
 from ..columns import _COLUMN_RULES, _is_section_row, obligation_title, validate_columns
 from ..md import blank_nav_lists, split_cells, strip_html_comments, strip_row
-from .card_common import _LAYOUT_ROW_RE
+from .card_common import _LAYOUT_ROW_RE, layout_label_rows, layout_row
 
 
 # Буквы-двойники кириллицы и латиницы (после приведения к нижнему регистру;
@@ -1298,6 +1298,10 @@ def check_source_tables(card_text: str, source_text: str,
     if history:
         report.append(f"i таблиц истории изменений не сверялось: {len(history)} "
                       f"(строк {sum(len(r) for r in history)})")
+    n_layout = layout_label_rows(source_text)
+    if n_layout:
+        report.append(f"i строки макетов ЭФ по ярлыку «Макеты» без ссылок Figma не сверялись: "
+                      f"{n_layout} (макеты живут в src, шаблон screen-form)")
     for hdr, rows in parse_md_tables(source_text):
         if len(hdr) < 2 or len(rows) < 2:
             continue
@@ -1355,7 +1359,8 @@ def check_source_tables(card_text: str, source_text: str,
                 continue
             # Строка макетов ЭФ (ссылка Figma, «размерность экрана») — служебная: шаблон
             # screen-form запрещает Figma/Confluence-URL в чистовике, макеты живут в src.
-            if any(_LAYOUT_ROW_RE.search(c) for c in row):
+            # FB-03 (2026-11-18): и по ярлыку «Макеты» / «Макеты ЭФ» (Zeplin, пусто).
+            if layout_row(row):
                 continue
             # Строка-указатель («Логика работы | …см. ниже») — навигация по
             # странице, дублирующая целевой раздел карточки: не требуется
@@ -1527,8 +1532,8 @@ def check_unchecked_tables(card_text: str, source_text: str,
         # как в check_source_tables: строки макетов ЭФ, строки вложений и
         # строки-указатели в дословную сверку не входят
         for row in rows:
-            if any(_ATTACHMENT_RE.search(c) or _LAYOUT_ROW_RE.search(c)
-                   or re.search(r"см\.\s*ниже", c, re.IGNORECASE) for c in row):
+            if layout_row(row) or any(_ATTACHMENT_RE.search(c)
+                                      or re.search(r"см\.\s*ниже", c, re.IGNORECASE) for c in row):
                 continue
             for cell in row:
                 c = cell.strip()

@@ -8,7 +8,7 @@ import re
 from typing import Dict, List, Optional, Tuple
 from ..html import _norm_cell, html_fragment_to_markdown, passport_cell_html
 from ..md import table_cells
-from .card_common import _LAYOUT_ROW_RE
+from .card_common import _LAYOUT_ROW_RE, is_layout_label
 
 
 def _fragment_profile(html: str) -> List[str]:
@@ -76,7 +76,9 @@ def heavy_source_pairs(src_text: str) -> List[Tuple[str, str]]:
         # живут в НЕсверяемом README-оглавлении группы, дословные ярлыки
         # («Размер XL - ссылка») ценности не несут; НАЛИЧИЕ ссылок в
         # README держит сторож figma-ссылок группы (selfcheck)
-        if _LAYOUT_ROW_RE.search(cell):
+        # (FB-03 сервиса «Обновление сведений», 2026-11-18: и по ярлыку «Макеты ЭФ» —
+        # ссылки Zeplin; число снятого только ярлыком — i-строкой check_source_tables)
+        if _LAYOUT_ROW_RE.search(cell) or is_layout_label(label):
             continue
         blocks = len(re.findall(r"<(?:p|ul|ol)\b", cell))
         if ("<ul" in cell or "<ol" in cell or len(cell) > _HEAVY_LEN
