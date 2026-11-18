@@ -8,7 +8,7 @@ import html as _stdhtml
 import re
 from typing import Dict, List, Optional, Tuple
 from .html import _BR_RE, _norm_cell, _plain, _title_key
-from .md import SILENT_FORMULA
+from .md import SILENT_FORMULA, norm_rule_notation
 
 
 # Валидаторы колонок: подпись — (имя_роли, распознаватель заголовка, проверка значения).
@@ -450,13 +450,22 @@ def validate_columns(headers: List[str], rows: List[List[str]],
                and (source_mode or not _is_silent_formula(r[i]))
                and not (role == "обязат" and source_mode and _struct_label_row(r, i))]
         wl =(source_literals or {}).get(role) or set()
+        # ячейка названия с правилом в нотации техбука — та же запись, что в источнике
+        # (md.norm_rule_notation; FB-02 сервиса «Обновление сведений», 2026-11-18)
+        wl_rule = {norm_rule_notation(w) for w in wl} if role == "название" else set()
 
-        def _in_wl(v: str, _wl=wl) -> bool:
+        def _in_wl(v: str, _wl=wl, _wl_rule=wl_rule) -> bool:
             # ярлык ссылки чистовика «[ENT-010 Название](…)» несёт ID, которого
             # в названии источника нет: сравниваем и без ID (ID — адрес
             # карточки, не часть названия; fun-cl-55 КК, 2026-11-01)
             k = _norm_cell(v)
-            return bool(k) and (k in _wl or _norm_cell(_LINK_ID_PREFIX_RE.sub("[", v)) in _wl)
+            if not k:
+                return False
+            k2 = _norm_cell(_LINK_ID_PREFIX_RE.sub("[", v))
+            if k in _wl or k2 in _wl:
+                return True
+            return bool(_wl_rule) and (norm_rule_notation(k) in _wl_rule
+                                       or norm_rule_notation(k2) in _wl_rule)
 
         pardoned = [v for v in bad if _in_wl(v)]
         bad = [v for v in bad if not _in_wl(v)]

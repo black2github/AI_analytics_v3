@@ -192,6 +192,23 @@ def norm_attr_notation(text: str) -> str:
         else f".«{m.group(1)}»", text)
 
 
+# FB-02 сервиса «Обновление сведений» (2026-11-18): ячейка названия с правилом в нотации техбука
+# (notation.md) — та же запись, что в источнике: подстановка `<X>` без точки пишется «X» (§7),
+# сравнение в условии — `==` вместо `=` (§2). Сводится только это; вид кавычек литерала (§7: «не
+# нормализуются никогда»), опущенное имя сущности перед реквизитом и пересказ — расхождение.
+_RULE_ANGLE_RE = re.compile(r"<(?![/!])([^<>\n]+?)>")
+_RULE_COND_RE = re.compile(r"(\bесли\b)(.*?)(\bто\b|$)", re.S | re.I)
+
+
+def norm_rule_notation(key: str) -> str:
+    """Ключ сверки ячейки-правила (после _norm_cell): `<X>` → «X» (HTML-тег — как есть),
+    `==` → `=` только между «если» и «то»."""
+    k = _RULE_ANGLE_RE.sub(
+        lambda m: m.group(0) if _HTML_TAG_BODY_RE.fullmatch(m.group(1))
+        else f"«{m.group(1)}»", key)
+    return _RULE_COND_RE.sub(lambda m: m.group(1) + m.group(2).replace("==", "=") + m.group(3), k)
+
+
 def _escaped_at(s: str, i: int) -> bool:
     """Символ s[i] экранирован: перед ним нечётное число «\\»."""
     n = 0
