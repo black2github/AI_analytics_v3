@@ -45,15 +45,22 @@ _NFR_TYPE_BY_CODE = {
 _NFR_CODES = frozenset(_NFR_TYPE_BY_CODE)
 
 
-# строки таблицы и пункты политик / скелета со **nfr-<код>-NNN.
+# строки единой таблицы | ID | Параметр | Допустимое значение | Пояснение |
 _NFR_ROW_RE = re.compile(r"(?m)^\|\s*(nfr-([a-z]{3})-(\d{3}))\s*\|")
+# устаревший список политик — запрещён
 _NFR_POLICY_RE = re.compile(
     r"(?m)^\s*[-*]\s+\*\*(nfr-([a-z]{3})-(\d{3}))\.")
 
 _NFR_INGRESS = frozenset({"reverse", "forward", "mixed"})
 
 _NFR_FORBIDDEN_COLUMNS = re.compile(
-    r"(?m)^\|[^\n]*\b(?:Не задано|Основание)\b[^\n]*\|")
+    r"^\|[^\n]*\b(?:Не задано|Основание|Единица измерения|"
+    r"Способ измерения)\b[^\n]*\|"
+    r"|^\|[^\n]*\bПоказатель\b[^\n]*\bЗначение\b[^\n]*\|",
+    re.MULTILINE)
+
+_NFR_REQUIRED_HEADER = re.compile(
+    r"(?m)^\|\s*ID\s*\|\s*Параметр\s*\|\s*Допустимое значение\s*\|\s*Пояснение\s*\|")
 
 
 def _nfr_repo_root(docs: Path) -> Path:
@@ -188,8 +195,7 @@ def check_nfr_catalog(docs: Path) -> Tuple[List[str], bool]:
         except OSError:
             text = ""
         seen_rows = set()
-        id_hits = list(_NFR_ROW_RE.findall(text)) + list(
-            _NFR_POLICY_RE.findall(text))
+        id_hits = list(_NFR_ROW_RE.findall(text))
         for token, row_code, _num in id_hits:
             if row_code != code:
                 ok = False
@@ -212,7 +218,19 @@ def check_nfr_catalog(docs: Path) -> Tuple[List[str], bool]:
         if _NFR_FORBIDDEN_COLUMNS.search(body):
             ok = False
             report.append(
-                f"✗ {rel}: запрещены колонки «Не задано» и «Основание»")
+                f"✗ {rel}: запрещены колонки «Не задано», «Основание», "
+                "«Показатель|Значение», «Единица измерения», "
+                "«Способ измерения»")
+        if not _NFR_REQUIRED_HEADER.search(body):
+            ok = False
+            report.append(
+                f"✗ {rel}: нужна таблица "
+                "| ID | Параметр | Допустимое значение | Пояснение |")
+        for token, _row_code, _num in _NFR_POLICY_RE.findall(body):
+            ok = False
+            report.append(
+                f"✗ {rel}: запрещён список политик ({token}); "
+                "норма — строка таблицы")
         if re.search(
                 r"(?m)^##\s*Текущее состояние и свидетельства\s*$", body):
             ok = False
@@ -234,8 +252,9 @@ def check_nfr_catalog(docs: Path) -> Tuple[List[str], bool]:
             brd_rows: set = set()
         else:
             mtext = _fs.read_text(matrix, encoding="utf-8", errors="replace")
+            # шаблон nfr.md: ## BRD-6 → ### BRD-6.2; допускаем и ## BRD-6.2
             sec = re.search(
-                r"^## BRD-6\.2\..*?(?=^## |\Z)", mtext, re.S | re.M)
+                r"^#{2,3} BRD-6\.2\..*?(?=^#{2,3} |\Z)", mtext, re.S | re.M)
             brd_rows = set(re.findall(
                 r"\|\s*(nfr-[a-z]{3}-\d{3})\s*\|",
                 sec.group(0) if sec else ""))
