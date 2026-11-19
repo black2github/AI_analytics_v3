@@ -411,3 +411,61 @@ def test_column_order_deviation_is_still_structure(tmp_path):
     assert "структура матрицы не по шаблону" in "\n".join(report), report
     _r, code = ms.write(docs)
     assert code == 2
+
+
+# ------------------------------------- служебные файлы миграции (решение 19.11.2026)
+
+_JOURNAL = ("---\nid: OQ\ntitle: 'Открытые вопросы'\n---\n\n# Открытые вопросы\n\n"
+            "## OQ-001. Кто подписывает заявку\n\nТекст.\n\n## OQ-002. Срок хранения\n\nТекст.\n")
+
+
+@pytest.mark.parametrize("name", ["open-questions.md", "feedback.md", "coordination-log.md",
+                                  "coordination-state.md", "scr-cl-01.tables.md"])
+def test_service_file_ids_not_derived_into_registry(tmp_path, name):
+    docs = kit(tmp_path)
+    w(docs / "srs" / name, _JOURNAL)
+    report, warn = ms.check(docs)
+    assert not warn, report
+    assert "OQ-001" not in "\n".join(report), report
+
+
+def test_regular_document_with_heading_ids_still_derived(tmp_path):
+    # несрабатывание: тот же текст в обычном документе комплекта — ID в реестр выводятся
+    docs = kit(tmp_path)
+    w(docs / "srs/questions.md", _JOURNAL)
+    report, warn = ms.check(docs)
+    text = "\n".join(report)
+    assert warn and "нет строки для ID из документов ×3: OQ; OQ-001; OQ-002" in text, text
+
+
+def test_registry_row_of_service_file_warned_and_removed_by_write(tmp_path):
+    docs = kit(tmp_path, registry=REGISTRY + "| OQ-001 | Кто подписывает заявку | "
+                                             "`srs/open-questions.md` |\n")
+    w(docs / "srs/open-questions.md", _JOURNAL)
+    report, warn = ms.check(docs)
+    text = "\n".join(report)
+    assert warn and "строка служебного файла миграции — --write снимет ×1: OQ-001" in text, text
+    assert "строка без документа" not in text and "только упоминается" not in text, text
+    report, code = ms.write(docs)
+    assert code == 0, report
+    assert "OQ-001" not in _section((docs / "traceability-matrix.md").read_text(encoding="utf-8"),
+                                    "Реестр ID")
+    report, warn = ms.check(docs)
+    assert not warn, report
+
+
+def test_registry_row_of_absent_service_file_warned_not_stale(tmp_path):
+    # гейт сверяет комплект без журнала (целевая раскладка): строка — та же ⚠, не «без документа»
+    docs = kit(tmp_path, registry=REGISTRY + "| OQ-001 | Вопрос | `srs/open-questions.md` |\n")
+    mx = docs / "traceability-matrix.md"
+    reg = next(s for s in ms.parse_matrix(mx.read_text(encoding="utf-8")) if s.key == "registry")
+    rf = dict(ms.registry_findings(reg, ms.Kit(docs, mx)))
+    assert rf.get(ms.REG_SERVICE) == ["OQ-001"] and ms.REG_STALE not in rf, rf
+
+
+def test_service_file_list_has_one_home():
+    # гейт берёт перечень из kitcheck/md.py, своей копии не держит
+    from app.scripts.CI import transfer_gate as tg
+    assert tg._SKIP_NAMES is tg.MIGRATION_SERVICE_NAMES
+    assert tg._SKIP_SUFFIXES is tg.MIGRATION_SERVICE_SUFFIXES
+    assert "open-questions.md" in tg._SKIP_NAMES

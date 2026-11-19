@@ -23,7 +23,10 @@
 колонку на её место и заполняет из тел (или «—»), прочие ячейки переносит по
 имени колонки. Это единственное автоматическое изменение структуры: расширение
 шаблона колонкой не останавливает пересборку у команд (решение владельца
-2026-10-19); прочие отклонения структуры — отказ.
+2026-10-19); прочие отклонения структуры — отказ. Исключение — порядок шести
+разделов при верном составе (решение владельца 2026-11-19): `--check` печатает
+⚠ «порядок разделов не по шаблону» и сверяет разделы, `--write` пересобирает
+таблицы на их местах и порядок разделов сохраняет как есть.
 
 Отказ (код 2, файл не тронут) — всякий раз, когда пересборка потеряла бы
 факт: структура не по шаблону; ID в ячейке, на который нет ссылки в
@@ -42,7 +45,11 @@
   с title главной карточки — title и через тире хвост H1 части («… — вкладка
   «Анкеты»»); старое название без тега остаётся, пока оно уникально; строки с
   файлом «—» ручные — снятые (пометка «снят …») и плановые (conventions §5,
-  §5.3 п.4–5);
+  §5.3 п.4–5); служебные файлы миграции (журнал `open-questions.md`,
+  `feedback.md`, журналы координации — перечень `kitcheck/md.py`, тот же, что
+  гейт переноса не переносит) документами комплекта не являются: их ID в
+  реестр не выводятся, строка реестра с таким файлом — ⚠ «--write снимет», не
+  отказ (решение владельца канона 19.11.2026);
 - покрытие: связь — markdown-ссылка в любую сторону; ID связи — ID из текста
   ссылки, если он определён в целевом файле, иначе ID заголовка по якорю,
   иначе ID файла; голая ссылка на документ-контейнер (справочник, документ
@@ -74,10 +81,12 @@ from urllib.parse import unquote
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import selfcheck as scx  # noqa: E402
 try:
-    from kitcheck.md import code_line_flags, table_cells  # noqa: E402
+    from kitcheck.md import (  # noqa: E402
+        code_line_flags, is_migration_service_file, table_cells)
     from kitcheck.checks.method_function_contour import find_pairs  # noqa: E402
 except ImportError:  # импорт пакетом app.scripts.CI (тесты)
-    from .kitcheck.md import code_line_flags, table_cells  # type: ignore  # noqa: E402
+    from .kitcheck.md import (  # type: ignore  # noqa: E402
+        code_line_flags, is_migration_service_file, table_cells)
     from .kitcheck.checks.method_function_contour import find_pairs  # type: ignore  # noqa: E402
 
 MATRIX = "traceability-matrix.md"
@@ -321,40 +330,58 @@ def missing_template_columns(sec: Section) -> List[str]:
     return [c for c in cols if c not in sec.header]
 
 
-def structure_issues(sections: List[Section]) -> List[str]:
-    """Отклонения от шаблона: состав, порядок, имена, колонки."""
-    issues: List[str] = []
+# класс отклонения структуры (решение владельца 2026-11-19, гейт переноса): «порядок» — только
+# порядок шести разделов при верном составе — сверка и --write работают, порядок сохраняется;
+# «блок» — всё остальное: --write отказывает, гейт переноса — ✗
+ORDER, BLOCK = "порядок", "блок"
+
+
+def structure_findings(sections: List[Section]) -> List[Tuple[str, str]]:
+    """Отклонения от шаблона с классом: (ORDER | BLOCK, текст)."""
+    issues: List[Tuple[str, str]] = []
     keys = [s.key for s in sections]
     for s in sections:
         if s.key == "unknown":
-            issues.append(f"раздел вне шаблона: «{s.title}»")
+            issues.append((BLOCK, f"раздел вне шаблона: «{s.title}»"))
     for k, title, _ in TEMPLATE:
         if k not in keys:
-            issues.append(f"нет раздела «{title}»")
+            issues.append((BLOCK, f"нет раздела «{title}»"))
         elif keys.count(k) > 1:
-            issues.append(f"раздел «{title}» встречается {keys.count(k)} раза")
+            issues.append((BLOCK, f"раздел «{title}» встречается {keys.count(k)} раза"))
     order = [k for k in keys if k in SECTION_TITLE]
     want = [k for k, _, _ in TEMPLATE if k in order]
     if order != want:
-        issues.append("порядок разделов не по шаблону: "
-                      + " → ".join(SECTION_TITLE[k] for k in order))
+        issues.append((ORDER, "порядок разделов не по шаблону: "
+                       + " → ".join(SECTION_TITLE[k] for k in order)))
     # приложения — ручные разделы после шести разделов шаблона
     tpl_pos = [n for n, k in enumerate(keys) if k in SECTION_TITLE]
     for n, s in enumerate(sections):
         if s.key == "appendix" and tpl_pos and n < tpl_pos[-1]:
-            issues.append(f"приложение «{s.title}» стоит до раздела "
-                          f"«{sections[tpl_pos[-1]].title}» — приложения идут после "
-                          "разделов шаблона")
+            issues.append((BLOCK, f"приложение «{s.title}» стоит до раздела "
+                                  f"«{sections[tpl_pos[-1]].title}» — приложения идут после "
+                                  "разделов шаблона"))
     for s in sections:
         if s.key in SECTION_TITLE and _norm_name(s.title) != _norm_name(SECTION_TITLE[s.key]):
-            issues.append(f"имя раздела «{s.title}» — по шаблону «{SECTION_TITLE[s.key]}»")
+            issues.append((BLOCK, f"имя раздела «{s.title}» — по шаблону "
+                                  f"«{SECTION_TITLE[s.key]}»"))
         cols = SECTION_COLS.get(s.key)
         if cols and s.header and s.header != cols and not missing_template_columns(s):
-            issues.append(f"колонки «{s.title}»: {' | '.join(s.header)} — по шаблону "
-                          f"{' | '.join(cols)}")
+            issues.append((BLOCK, f"колонки «{s.title}»: {' | '.join(s.header)} — по шаблону "
+                                  f"{' | '.join(cols)}"))
         if cols and len(s.tables) != 1:
-            issues.append(f"в разделе «{s.title}» таблиц {len(s.tables)} — по шаблону одна")
+            issues.append((BLOCK, f"в разделе «{s.title}» таблиц {len(s.tables)} — по шаблону "
+                                  "одна"))
     return issues
+
+
+def structure_issues(sections: List[Section]) -> List[str]:
+    """Отклонения от шаблона: состав, порядок, имена, колонки (тексты structure_findings)."""
+    return [t for _c, t in structure_findings(sections)]
+
+
+def blocking_structure(sections: List[Section]) -> List[str]:
+    """Отклонения, при которых --write отказывает: всё, кроме порядка разделов."""
+    return [t for c, t in structure_findings(sections) if c == BLOCK]
 
 
 # ---------------------------------------------------------------- комплект
@@ -381,7 +408,9 @@ class Kit:
         self.own_contracts: Dict[str, Set[str]] = {}
         for _f, fid, _c, cid, _how in find_pairs(docs):
             self.own_contracts.setdefault(fid, set()).add(cid)
-        files = [p for p in scx._kit_md(docs) if p.resolve() != matrix.resolve()]
+        # служебные файлы миграции (журнал вопросов и др.) — не документы комплекта
+        files = [p for p in scx._kit_md(docs) if p.resolve() != matrix.resolve()
+                 and not is_migration_service_file(p.name)]
         texts: Dict[Path, str] = {}
         fms: Dict[Path, Dict[str, str]] = {}
         for p in files:
@@ -578,8 +607,20 @@ def _emit(lines: List[str], title: str, items: List[str], limit: int = 12) -> No
                      + (" …" if len(items) > limit else ""))
 
 
-def check_registry(sec: Section, kit: Kit) -> List[str]:
-    lines: List[str] = []
+# виды расхождения реестра (заголовки строк check_registry; гейт переноса: «только
+# упоминается» и «строка служебного файла миграции» — ⚠, остальные — ✗; решения владельца
+# 2026-11-19)
+REG_MISSING = "нет строки для ID из документов"
+REG_REUSED = "снятый ID снова в документах (ID переиспользован)"
+REG_STALE = "строка без документа (документ удалён или сменил ID — оформить снятие)"
+REG_MENTION = ("ID только упоминается в тексте — нет ни в шапке, ни в заголовке, ни в "
+               "первой ячейке таблицы")
+REG_WRONG_FILE = "файл расходится"
+REG_SERVICE = "строка служебного файла миграции — --write снимет"
+
+
+def registry_findings(sec: Section, kit: Kit) -> List[Tuple[str, List[str]]]:
+    """Расхождения «Реестра ID» с документами: [(вид, перечень)] — непустые, в порядке отчёта."""
     fcol = sec.col(r"файл", len(sec.header) - 1 if sec.header else 2)
     have: Dict[str, List[str]] = {}
     for r in sec.rows:
@@ -588,25 +629,31 @@ def check_registry(sec: Section, kit: Kit) -> List[str]:
             have.setdefault(i, r)
     derived = kit.derived_registry()
     missing = sorted(i for i in derived if i not in have)
-    reused, stale, mention, wrong_file = [], [], [], []
+    reused, stale, mention, wrong_file, service = [], [], [], [], []
     for i, r in have.items():
         fcell = _file_cell(r[fcol] if len(r) == len(sec.header) else r[-1]) if r else ""
         if fcell in ("—", "-", ""):
             if re.search(r"\bснят", " ".join(r), re.I) and i in derived:
                 reused.append(i)
             continue
-        if i not in derived:
+        if i not in derived and is_migration_service_file(fcell.rsplit("/", 1)[-1]):
+            # журнал вопросов и др. — не документ комплекта: пересборка строку снимает
+            service.append(i)
+        elif i not in derived:
             gone = not (kit.docs / fcell).is_file()
             (mention if not gone and re.search(r"(?<![\w-])" + re.escape(i) + r"(?![\w.-])",
                                                kit.text) else stale).append(i)
         elif fcell != derived[i][0] and not derived[i][0].endswith("/" + fcell):
             wrong_file.append(f"{i}: {fcell} → {derived[i][0]}")
-    _emit(lines, "нет строки для ID из документов", missing)
-    _emit(lines, "снятый ID снова в документах (ID переиспользован)", reused)
-    _emit(lines, "строка без документа (документ удалён или сменил ID — оформить снятие)", stale)
-    _emit(lines, "ID только упоминается в тексте — нет ни в шапке, ни в заголовке, ни в "
-                 "первой ячейке таблицы", mention)
-    _emit(lines, "файл расходится", wrong_file, 6)
+    return [(k, v) for k, v in ((REG_MISSING, missing), (REG_REUSED, reused), (REG_STALE, stale),
+                                (REG_MENTION, mention), (REG_WRONG_FILE, wrong_file),
+                                (REG_SERVICE, service)) if v]
+
+
+def check_registry(sec: Section, kit: Kit) -> List[str]:
+    lines: List[str] = []
+    for kind, items in registry_findings(sec, kit):
+        _emit(lines, kind, items, 6 if kind == REG_WRONG_FILE else 12)
     return lines
 
 
@@ -765,9 +812,14 @@ def check(docs: Path, matrix: Optional[Path] = None) -> Tuple[List[str], bool]:
     kit = Kit(docs, matrix)
     report: List[str] = []
     st = structure_issues(sections)
-    if st:
+    if blocking_structure(sections):
         report.append(f"⚠ структура матрицы не по шаблону ×{len(st)} (--write не работает):")
         report.extend(f"   {x}" for x in st)
+    elif st:
+        # только порядок шести разделов (решение владельца 2026-11-19): сверка и --write
+        # работают, порядок разделов --write сохраняет как есть
+        report.append(f"⚠ {st[0]} — --write работает и порядок сохраняет; перестановка "
+                      "разделов — вручную")
     by_key: Dict[str, Section] = {}
     for s in sections:
         by_key.setdefault(s.key, s)
@@ -953,7 +1005,9 @@ def write(docs: Path, matrix: Optional[Path] = None) -> Tuple[List[str], int]:
     sections = parse_matrix(text)
     kit = Kit(docs, matrix)
     refuse: List[str] = []
-    st = structure_issues(sections)
+    # отклонение только порядка разделов — не отказ: таблицы пересобираются на своих местах,
+    # порядок разделов сохраняется (решение владельца 2026-11-19)
+    st = blocking_structure(sections)
     if st:
         refuse.append(f"структура не по шаблону ×{len(st)}: " + "; ".join(st[:4])
                       + (" …" if len(st) > 4 else ""))

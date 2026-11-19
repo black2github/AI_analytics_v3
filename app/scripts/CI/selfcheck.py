@@ -88,7 +88,13 @@ try:
     from kitcheck.checks.links import (  # noqa: E402,F401 — этап 3
         _CALL_USAGE_RE, _CARD_ID_HEAD_RE, _ENT_FILE_RE, _NAMED_LINK_SKIP, _SERVICE_FILES, _STEP_CELL_RE, _STEP_HEAD_RE, _STEP_NUM_RE, _STEP_RANGE_RE, _TAGGED_NAME_RE, _link_targets, _step_literals, check_bare_entity_mentions, check_link_anchors_and_ids, check_named_entity_links, check_process_call_consistency, check_relative_links)
     from kitcheck.checks.matrix import (  # noqa: E402,F401 — этап 3
-        _REGISTRY_HDR_RE, check_registry_duplicates, check_registry_name_duplicates)
+        _REGISTRY_HDR_RE, check_registry_duplicates, check_registry_name_duplicates,
+        api_coverage, api_coverage_lines)
+    from kitcheck.checks.brd import (  # noqa: E402,F401 — гейт переноса П6–П8
+        brd_gates_lines, brd_layer, brd_layer_lines, layer_links, layer_links_lines)
+    from kitcheck.checks.ids_domain import doc_types, doc_types_lines  # noqa: E402,F401 — П9
+    from kitcheck.checks.call_ext_base import (  # noqa: E402,F401 — гейт переноса П11
+        call_ext_lines, call_ext_without_contract)
     from kitcheck.checks.nfr import (  # noqa: E402,F401 — этап 3
         _NFR_CODES, _NFR_INGRESS, _NFR_ROW_RE, _NFR_TYPE_BY_CODE, _nfr_repo_root, check_nfr_catalog)
     from kitcheck.checks.source_profile import (  # noqa: E402,F401 — этап 3
@@ -124,7 +130,14 @@ except ImportError:  # импорт пакетом app.scripts.CI (тесты)
     from .kitcheck.checks.links import (  # type: ignore  # noqa: E402,F401
         _CALL_USAGE_RE, _CARD_ID_HEAD_RE, _ENT_FILE_RE, _NAMED_LINK_SKIP, _SERVICE_FILES, _STEP_CELL_RE, _STEP_HEAD_RE, _STEP_NUM_RE, _STEP_RANGE_RE, _TAGGED_NAME_RE, _link_targets, _step_literals, check_bare_entity_mentions, check_link_anchors_and_ids, check_named_entity_links, check_process_call_consistency, check_relative_links)
     from .kitcheck.checks.matrix import (  # type: ignore  # noqa: E402,F401
-        _REGISTRY_HDR_RE, check_registry_duplicates, check_registry_name_duplicates)
+        _REGISTRY_HDR_RE, check_registry_duplicates, check_registry_name_duplicates,
+        api_coverage, api_coverage_lines)
+    from .kitcheck.checks.brd import (  # type: ignore  # noqa: E402,F401
+        brd_gates_lines, brd_layer, brd_layer_lines, layer_links, layer_links_lines)
+    from .kitcheck.checks.ids_domain import (  # type: ignore  # noqa: E402,F401
+        doc_types, doc_types_lines)
+    from .kitcheck.checks.call_ext_base import (  # type: ignore  # noqa: E402,F401
+        call_ext_lines, call_ext_without_contract)
     from .kitcheck.checks.nfr import (  # type: ignore  # noqa: E402,F401
         _NFR_CODES, _NFR_INGRESS, _NFR_ROW_RE, _NFR_TYPE_BY_CODE, _nfr_repo_root, check_nfr_catalog)
     from .kitcheck.checks.source_profile import (  # type: ignore  # noqa: E402,F401
@@ -1510,6 +1523,59 @@ def _kc_api_matrix_refs(ctx: "_KitCtx") -> Tuple[List[str], bool]:
     return report, all_ok
 
 
+def _kc_matrix_api_coverage(ctx: "_KitCtx") -> Tuple[List[str], bool]:
+    # раздел «Покрытие: API ↔ SRS» против карточек методов (постановка 2026-11-19, П4–П5):
+    # в самопроверке — ⚠ (вердикт не меняется), отказ — у гейта переноса в полном режиме;
+    # пройденная строка не печатается — отчёт команды не растёт
+    rep, _ = _safe(lambda: ([f"⚠ матрица «Покрытие: API ↔ SRS»: {t} (гейт переноса — ✗)"
+                             for m, t in api_coverage_lines(api_coverage(ctx.docs))
+                             if m == "✗"], True))
+    return rep, True
+
+
+def _kc_brd_layer(ctx: "_KitCtx") -> Tuple[List[str], bool]:
+    # слой BRD (постановка 2026-11-19, П6–П8): в самопроверке — ⚠, вердикт не меняется; отказ —
+    # у гейта переноса в полном режиме. Без каталога сервисов и без brd/ — молчит (платформенный
+    # сервис не отличить; гейт без каталога отказывает сам). Пройденные строки не печатаются
+    def lines() -> Tuple[List[str], bool]:
+        cat = ctx.catalog if ctx.catalog is not None else canon_catalog_path()
+        info = brd_layer(ctx.docs, cat)
+        tail = " (гейт переноса — ✗)"
+        out: List[str] = []
+        if info["catalog"] or info["brd"]:
+            out += [f"⚠ слой BRD: {t}{tail}" for m, t in brd_layer_lines(info) if m == "✗"]
+        out += [f"⚠ слой BRD: {t}" + (tail if m == "✗" else "")
+                for m, _c, t in brd_gates_lines(ctx.docs) if m in ("✗", "⚠")]
+        if info["brd"]:
+            out += [f"⚠ слой BRD: {t}" + (tail if m == "✗" else "")
+                    for m, t in layer_links_lines(layer_links(ctx.docs))]
+        return out, True
+    rep, _ = _safe(lines)
+    return rep, True
+
+
+def _kc_doc_types(ctx: "_KitCtx") -> Tuple[List[str], bool]:
+    # типы документов объявлены (гейт переноса TRF-04, постановка 2026-11-19, П9): тип вне набора
+    # платформы не описан в README — ⚠ (гейт — ✗); тип из набора не описан — ⚠
+    def lines() -> Tuple[List[str], bool]:
+        readme = ctx.docs / "README.md"
+        rtext = _fs.read_text(readme, encoding="utf-8", errors="replace") if readme.is_file() else ""
+        return [f"⚠ типы документов: {t}" + (" (гейт переноса — ✗)" if m == "✗" else "")
+                for m, t in doc_types_lines(doc_types(_kit_md(ctx.docs), rtext),
+                                            readme=readme.is_file())
+                if m in ("✗", "⚠")], True
+    rep, _ = _safe(lines)
+    return rep, True
+
+
+def _kc_call_ext_base(ctx: "_KitCtx") -> Tuple[List[str], bool]:
+    # внешний вызов ведёт к контракту (гейт переноса SDLC-02, постановка 2026-11-19, П11): ⚠
+    rep, _ = _safe(lambda: ([f"⚠ внешний вызов: {t} (гейт переноса — ✗)"
+                             for m, t in call_ext_lines(call_ext_without_contract(ctx.docs))
+                             if m == "✗"], True))
+    return rep, True
+
+
 def _kc_similar_group_points(ctx: "_KitCtx") -> Tuple[List[str], bool]:
     docs, = ctx.docs,
     report: List[str] = []
@@ -1650,6 +1716,10 @@ KIT_CHECKS: List[Check] = [
     Check("service_catalog_and_h1", _kc_service_catalog_and_h1, affects_verdict=False),
     Check("no_api_in_bundle", _kc_no_api_in_bundle, affects_verdict=False),
     Check("api_matrix_refs", _kc_api_matrix_refs, affects_verdict=True),
+    Check("matrix_api_coverage", _kc_matrix_api_coverage, affects_verdict=False),
+    Check("brd_layer", _kc_brd_layer, affects_verdict=False),
+    Check("doc_types", _kc_doc_types, affects_verdict=False),
+    Check("call_ext_base", _kc_call_ext_base, affects_verdict=False),
     Check("similar_group_points", _kc_similar_group_points, affects_verdict=False),
     Check("bare_entity_mentions", _kc_bare_entity_mentions, affects_verdict=False),
     Check("named_entity_links", _kc_named_entity_links, affects_verdict=False),

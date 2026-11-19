@@ -7,14 +7,19 @@ sys.path.insert(0, str(_P(__file__).resolve().parents[2]))  # каталог у�
 from pathlib import Path
 from typing import Dict
 from typing import List
+from typing import Optional
 from typing import Tuple
 import re
 try:
     from kitcheck import fs as _fs
-    from kitcheck.md import table_cells
+    from kitcheck.md import table_cells, _kit_md, read_frontmatter
+    from kitcheck.checks._common import in_outside_eco_part, passport_slugs
+    from kitcheck.checks.catalog_api import api_section
 except ImportError:  # импорт пакетом app.scripts.CI (тесты)
     from .. import fs as _fs  # type: ignore
-    from ..md import table_cells  # type: ignore
+    from ..md import table_cells, _kit_md, read_frontmatter  # type: ignore
+    from ._common import in_outside_eco_part, passport_slugs  # type: ignore
+    from .catalog_api import api_section  # type: ignore
 
 
 _REGISTRY_HDR_RE = re.compile(r"^#+\s*(?:\d+\.\s*)?Реестр\s+ID",
@@ -109,3 +114,112 @@ def check_registry_name_duplicates(matrix_path: Path,
             continue
         out.append(f"{', '.join(sorted(ids))} — «{items[0][1].strip()}»")
     return out
+
+
+# --- раздел «Покрытие: API ↔ SRS»: пустота и полнота (гейт переноса, П4–П5) ---
+#
+# Постановка 2026-11-19 (сессия «AI Factory»), решения владельца 19.11: раздел пуст при
+# карточках собственных методов — отказ гейта, если причина не записана в шапке раздела (текст
+# между заголовком и таблицей); каждая карточка `type: internal-contract` в контуре Экосистемы
+# названа своим ID в разделе — строкой-операцией либо в колонке «Артефакты SRS»
+# (conventions §5.3 п. 7: до перехода на API First строка раздела — карточка INTC). Карточки части
+# вне контура Экосистемы (паспорт границы `srs/<слаг>/boundary-passport.md`, канал js-api) и
+# README-реестры методов (файл README.md) не считаются — правило шаблона матрицы. Признаки — тип
+# шапки, файл паспорта границы, имя файла, ID в ячейке; слов источника нет. Слой — ядро
+# (работает без выгрузки). В selfcheck — ⚠ (вердикт не меняется), гейт полного режима — ✗.
+
+_SEP_ROW_RE = re.compile(r"^\|[\s:|-]+\|?$")
+
+
+def _api_rows(section: str) -> List[str]:
+    """Строки данных таблиц раздела: без шапки каждой таблицы и разделителя."""
+    rows: List[str] = []
+    in_table = False
+    for ln in section.splitlines():
+        s = ln.strip()
+        if not s.startswith("|"):
+            in_table = False
+            continue
+        if not in_table:
+            in_table = True  # первая строка таблицы — шапка
+            continue
+        if _SEP_ROW_RE.match(s):
+            continue
+        rows.append(s)
+    return rows
+
+
+def api_coverage(docs: Path) -> Optional[dict]:
+    """Раздел «Покрытие: API ↔ SRS» против карточек методов. None — матрицы нет.
+    {section: раздел есть, ops: строк-операций, reason: шапка раздела (причина пустоты),
+    intc: ID карточек методов в контуре Экосистемы, outside: число карточек части вне контура,
+    unnamed: ID карточек, не названных в разделе}."""
+    matrix = docs / "traceability-matrix.md"
+    if not matrix.is_file():
+        return None
+    text = _fs.read_text(matrix, encoding="utf-8", errors="replace")
+    sect = api_section(text)
+    slugs = passport_slugs(docs)
+    intc: List[str] = []
+    outside = 0
+    for p in _kit_md(docs):
+        if p.name.lower() == "readme.md":
+            continue
+        fm = read_frontmatter(p) or {}
+        if str(fm.get("type", "")).strip().strip("'\"") != "internal-contract":
+            continue
+        cid = str(fm.get("id", "")).strip().strip("'\"")
+        if not cid:
+            continue
+        if in_outside_eco_part(p, docs, slugs):
+            outside += 1
+        else:
+            intc.append(cid)
+    out = {"section": sect is not None, "ops": 0, "reason": "", "intc": sorted(intc),
+           "outside": outside, "unnamed": []}
+    if sect is None:
+        return out
+    header, section = sect
+    # шапка: первая строка — хвост строки заголовка, не текст раздела
+    out["reason"] = " ".join(header.split("\n", 1)[1].split()) if "\n" in header else ""
+    rows = _api_rows(section)
+    out["ops"] = len(rows)
+    if rows:
+        try:
+            import matrix_sync as _ms  # noqa: E402 — диапазоны ID «INTC-001…INTC-005»
+        except ImportError:  # импорт пакетом app.scripts.CI (тесты)
+            from ... import matrix_sync as _ms  # type: ignore
+        named = _ms.cell_ids("\n".join(rows))
+        out["unnamed"] = [i for i in out["intc"] if i not in named]
+    return out
+
+
+def api_coverage_lines(cov: Optional[dict]) -> List[Tuple[str, str]]:
+    """(знак гейта полного режима, текст) по разделу API; раздела нет — пусто (строку об
+    отсутствии раздела печатает гейт)."""
+    if not cov or not cov["section"]:
+        return []
+    n, outside = len(cov["intc"]), cov["outside"]
+    tail = (f"; карточек части вне контура Экосистемы {outside} — в раздел не вносятся"
+            if outside else "")
+    if cov["ops"] == 0:
+        if not n:
+            return [("✓", "раздел пуст — собственных методов нет" + tail)]
+        if cov["reason"]:
+            q = cov["reason"]
+            return [("✓", f"раздел пуст, причина записана в шапке раздела: «{q[:160]}"
+                          f"{'…' if len(q) > 160 else ''}»" + tail)]
+        return [("✗", f"раздел пуст, а в комплекте карточек собственных методов "
+                      f"(internal-contract) {n}: {', '.join(cov['intc'][:8])}"
+                      f"{'…' if n > 8 else ''} — внесите операции (до перехода на API First "
+                      "строка раздела — карточка INTC) либо запишите причину пустоты в шапке "
+                      "раздела, между заголовком и таблицей" + tail)]
+    if cov["unnamed"]:
+        u = cov["unnamed"]
+        return [("✗", f"операций {cov['ops']}; карточки собственных методов не названы в "
+                      f"разделе: {len(u)} из {n} ({', '.join(u[:8])}{'…' if len(u) > 8 else ''})"
+                      " — каждая карточка internal-contract в контуре Экосистемы названа своим "
+                      "ID строкой-операцией либо в колонке «Артефакты SRS» (conventions §5.3 "
+                      "п. 7)" + tail)]
+    return [("✓", f"раздел есть, операций {cov['ops']}"
+                  + (f"; все карточки собственных методов названы ({n})" if n else "") + tail)]

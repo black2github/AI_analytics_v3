@@ -403,6 +403,20 @@ def in_sources_dir(p: Path, docs: Path, sources: Optional[Path] = None) -> bool:
     rp = p.resolve()
     return any(rp.is_relative_to(s) for s in dirs)
 
+# Служебные файлы миграции — журнал вопросов, обратная связь, журналы координации,
+# промежуточные выгрузки таблиц: не документы комплекта. В репозиторий документации не
+# переезжают (гейт переноса, stage_kit, TRF-02) и в «Реестр ID» матрицы не выводятся
+# (matrix_sync). Перечень — один дом для обоих.
+MIGRATION_SERVICE_NAMES = frozenset({"open-questions.md", "feedback.md", "coordination-log.md",
+                                     "coordination-state.md"})
+MIGRATION_SERVICE_SUFFIXES: Tuple[str, ...] = (".filled.md", ".tables.md")
+
+
+def is_migration_service_file(name: str) -> bool:
+    """Имя файла (без каталога) — служебный файл миграции."""
+    return name in MIGRATION_SERVICE_NAMES or name.endswith(MIGRATION_SERVICE_SUFFIXES)
+
+
 def _kit_md(docs: Path):
     """Документы комплекта для обходов сторожей — без постановок `tasks/`, точечных
     каталогов и каталогов выгрузки внутри комплекта (`in_sources_dir`). Часть вне контура

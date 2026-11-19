@@ -10,7 +10,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "app" / "scripts" /
 import transfer_gate as tg  # noqa: E402
 from kitcheck.checks import review_guards as rg  # noqa: E402
 
-from tests.test_transfer_gate import _OQ_CLOSED, make_src  # noqa: E402
+from tests.test_transfer_gate import (  # noqa: E402,F401 — platform_catalog: сервис X платформенный
+    _OQ_CLOSED, make_src, platform_catalog)
 
 AFTER = date.fromordinal(rg.OQ_CLOSE_FORM_SINCE.toordinal() + 2).isoformat()
 

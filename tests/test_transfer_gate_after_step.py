@@ -8,7 +8,9 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "app" / "scripts" / "CI"))
 import transfer_gate as tg  # noqa: E402
-from tests.test_transfer_gate import _CARD, _MATRIX, _OQ_OPEN, _target, _w, make_src  # noqa: E402
+from tests.test_transfer_gate import (  # noqa: E402
+    _API_SEC, _CARD, _MATRIX, _MATRIX_BASE, _OQ_OPEN, _target, _w, make_src,
+    platform_catalog)  # noqa: E402,F401 — каталог сервисов тестов (сервис X платформенный)
 
 
 def _run(src: Path, **kw):
@@ -64,7 +66,7 @@ def test_core20_debt_reading_rule_not_downgraded(tmp_path):
     row = ("\n## 5. Долги по ссылкам\n\n| От | — | Долг |\n|---|---|---|\n"
            "| FUN-CL-01 | — | нет целевого артефакта data-model «Карта» у владельца cards — "
            "требуется заход create-data-model |\n")
-    src = make_src(tmp_path, matrix=_MATRIX + row)
+    src = make_src(tmp_path, matrix=_MATRIX_BASE + row)
     _w(src / "docs/srs/function/client/fun-cl-01-f1.md", _CARD.replace("см.", "использует «Карта»; см."))
     lines, ready, _ = _run(src, after_step=True)
     assert not ready and _line(lines, "✗ [CORE-20] перенесённые долги: 1")
@@ -80,7 +82,7 @@ def test_sdlc05_warn_full_info_after_step(tmp_path):
 
 
 def test_sdlc04_missing_section_blocker_full_warn_after_step(tmp_path):
-    m = _MATRIX.split("## 3.")[0]
+    m = _MATRIX.replace(_API_SEC, "")
     lines, ready, _ = _run(make_src(tmp_path, matrix=m))
     assert not ready and _line(lines, "✗ [SDLC-04] раздела нет")
     lines, ready, _ = _run(make_src(tmp_path / "b", matrix=m), after_step=True)
@@ -216,14 +218,17 @@ def _part(src: Path) -> None:
 
 def test_part_dirs_follow_sdlc08_and_passport_type_listed(tmp_path):
     # каталоги части — каталоги карточек комплекта: README-реестр по SDLC-08, как у любой части;
-    # module-passport — тип вне набора платформы (i TRF-04)
+    # module-passport — тип вне набора платформы; не описан в README — ✗ полного гейта (П9,
+    # 2026-11-19), в лёгком режиме — ⚠
     src = make_src(tmp_path)
     _part(src)
     lines, _r, _d = _run(src, after_step=True)
     ln = _line(lines, "⚠ [SDLC-08] каталоги с карточками без README-реестра")
     assert ln and "srs/widgets-rtl/internal-contract/client" in ln, "\n".join(lines)
-    ln = _line(lines, "i [TRF-04] типы вне закрытого набора платформы")
-    assert ln and "module-passport ×1" in ln and "internal-contract ×1" in ln, ln
+    ln = _line(lines, "⚠ [TRF-04] типы вне закрытого набора платформы не описаны в README комплекта")
+    assert ln and "module-passport ×1 (BND)" in ln and "internal-contract ×1 (INTC)" in ln, ln
+    lines, _r, _d = _run(src)
+    assert _line(lines, "✗ [TRF-04] типы вне закрытого набора платформы не описаны"), "\n".join(lines)
 
 
 def test_passport_type_declared_by_bnd_prefix(tmp_path):
@@ -231,8 +236,10 @@ def test_passport_type_declared_by_bnd_prefix(tmp_path):
     src = make_src(tmp_path)
     _part(src)
     readme = src / "docs/README.md"
-    readme.write_text(readme.read_text(encoding="utf-8")
-                      + "\n| **BND** | паспорт границы |\n| **INTC** | контракт |\n", encoding="utf-8")
+    # описание — в таблице типов «Условных обозначений» (П9, 2026-11-19: вне раздела не считается)
+    readme.write_text(readme.read_text(encoding="utf-8").replace(
+        "| **FUN** | Функция |\n", "| **FUN** | Функция |\n| **BND** | паспорт границы |\n"
+                                  "| **INTC** | контракт |\n"), encoding="utf-8")
     lines, _r, _d = _run(src, after_step=True)
     ln = _line(lines, "i [TRF-04] типы вне закрытого набора платформы")
     assert ln and "объявлены в README комплекта" in ln, ln

@@ -56,15 +56,39 @@
 #        - матрица трассировки несёт раздел «Покрытие: API ↔ SRS» (хоть
 #          пустой: по нему планировщик платформы находит репозитории
 #          кода; нет раздела — нет API-слоя в задачах) — SDLC-04;
+#        - матрица трассировки (постановка 2026-11-19, решения владельца 19.11; сверку
+#          гейт делает сам — matrix_sync, а не через обёртку selfcheck, которая при
+#          отклонении структуры сверку пропускает): структура по шаблону — порядок шести
+#          разделов при верном составе ⚠, прочие отклонения ✗ (SDLC-04); «Реестр ID» с
+#          документами — расхождение ✗, «ID только упоминается» ⚠ (SDLC-09); покрытия
+#          функций и процессов — любое расхождение, в том числе недостающая колонка
+#          шаблона, ✗ с командой пересборки; «Источники миграции» ⚠ (SDLC-04); раздел
+#          API пуст при карточках собственных методов (internal-contract в контуре
+#          Экосистемы; карточки части вне контура и README-реестры не считаются) без
+#          причины в шапке раздела — ✗; карточка метода не названа в разделе — ✗
+#          (SDLC-04, conventions §5.3 п. 7);
+#        - слой BRD (SDLC-06, kitcheck/checks/brd.py): у продуктового сервиса (каталог
+#          сервисов, is_platform; не найден или каталог недоступен — как продуктовый)
+#          нет brd/ — ✗, отсрочка ключом --brd-deferred — ⚠; секции BRD-1…5 матрицы (по
+#          префиксу заголовка) и нулевые гейты таблицы BRD-5 (ведущее число ячейки) — ✗;
+#          пересчёт трёх счётчиков по комплекту — ⚠; ссылка между слоями brd/ и srs/ из
+#          тела документа — ✗, файлы README.md (навигация) не рассматриваются (SDLC-01,
+#          conventions §5.4);
+#        - README ссылается на traceability-matrix.md — ⚠ (SDLC-08);
+#        - карточка внешнего вызова CALL-EXT ссылается на md базового контракта в
+#          docs-external-contracts либо её ID — FROM-ID строки долга — иначе ✗ (SDLC-02);
+#        - версия комплекта (CORE-05): при --out незакоммиченные изменения в каталоге
+#          комплекта (без служебных файлов) или каталог не под git — ✗, без --out — ⚠ / i;
 #        - каталога `api/` и YAML OpenAPI/AsyncAPI в комплекте нет
 #          (контракты живут в репозитории кода) — условие переноса;
 #        - `README.md` комплекта есть (точка входа внешних читателей) —
 #          SDLC-08; раздел «Условные обозначения» — предупреждение;
 #        - `service-vision.md`, `glossary.md` — предупреждение, если нет
 #          (у платформы обязательны только для нового сервиса) — SDLC-05;
-#        - типы документов вне закрытого набора платформы перечисляются как
-#          исключения к согласованию (TRF-04 / SDLC-01); пустой раздел API при
-#          наличии описаний методов — предупреждение (SDLC-04); .txt-пример,
+#        - типы документов вне закрытого набора платформы, описанные в «Условных
+#          обозначениях» README (токен типа либо ID-префикс его документов, выведенный из
+#          комплекта), перечисляются как исключения к согласованию (i), не описанные — ✗,
+#          тип из набора, не описанный, — ⚠ (TRF-04 / SDLC-01); .txt-пример,
 #          который разбирается, — предупреждение (FMT-01, защита от обхода);
 #          каталоги карточек без README-реестра — предупреждение (SDLC-08);
 #          внешние ссылки — перечень хостов для ручной проверки (CORE-09);
@@ -137,9 +161,12 @@
 #                       selfcheck НЕ гоняется (команда гоняет его сама, вердикт — в
 #                       сдаче); критерии конца миграции понижены по закрытому
 #                       списку: CORE-20 «открытые вопросы» ✗ → i, SDLC-05 ⚠ → i,
-#                       SDLC-04 «раздела API ↔ SRS нет» ✗ → ⚠; остальные ✗
-#                       (TRF-01…04, SDLC-08, FMT-01, CORE-06, CORE-09, ВАЛИДАТОР)
-#                       остаются ✗; корень сборки проверяется самим гейтом
+#                       SDLC-04 «раздела API ↔ SRS нет» ✗ → ⚠; проверки переноса
+#                       2026-11-19 ✗ → ⚠: матрица (структура, реестр ID, покрытия,
+#                       раздел API), слой BRD, секции и гейты BRD, ссылки между слоями,
+#                       типы документов (TRF-04), внешний вызов → базовый контракт;
+#                       остальные ✗ (TRF-01…03, SDLC-08, FMT-01, CORE-06, CORE-09,
+#                       ВАЛИДАТОР) остаются ✗; корень сборки проверяется самим гейтом
 #                       (посторонний каталог или не-markdown файл — ✗ TRF-01:
 #                       в полном режиме это делает selfcheck на сборке);
 #                       --out отклоняется. Вердикт — «ФОРМА
@@ -167,6 +194,13 @@
 #                       архиву raw, как ключ selfcheck --raw); по умолчанию выключен
 #   --bundle <каталог>  каталог бандла экспортёра для сверки по архиву raw (как ключ
 #                       selfcheck --bundle)
+#   --catalog <файл>    каталог сервисов services.json (по умолчанию — _meta/services.json
+#                       канона рядом с прибором): платформенный сервис для слоя BRD; каталог
+#                       недоступен и brd/ нет — ✗ «задайте --catalog»
+#   --brd-deferred "<основание>; ответственный: <кто>; срок: <ГГГГ-ММ-ДД>"
+#                       отсрочка слоя BRD продуктового сервиса: вместо ✗ строка ⚠ с текстом
+#                       ключа; текст — в шапку отчёта и в «Ручную часть протокола»; без
+#                       ответственного или срока — ✗ с названием поля
 #
 # ПРИМЕР.
 #   python _meta/tools/transfer_gate.py --src C:\doc-as-code\EAS\src-business-cards
@@ -192,6 +226,13 @@ from typing import Dict, List, Optional, Tuple
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import selfcheck as sc  # noqa: E402
 import link_debts as ld  # noqa: E402
+import matrix_sync as ms  # noqa: E402
+from kitcheck.md import MIGRATION_SERVICE_NAMES, MIGRATION_SERVICE_SUFFIXES  # noqa: E402
+from kitcheck.checks.matrix import api_coverage, api_coverage_lines  # noqa: E402
+from kitcheck.checks.brd import (  # noqa: E402
+    brd_gates_lines, brd_layer, brd_layer_lines, layer_links, layer_links_lines)
+from kitcheck.checks.ids_domain import PLATFORM_TYPES, doc_types, doc_types_lines  # noqa: E402
+from kitcheck.checks.call_ext_base import call_ext_lines, call_ext_without_contract  # noqa: E402
 import source_coverage as cov  # noqa: E402
 from kitcheck.checks._common import domain_context  # noqa: E402
 from kitcheck.fs import find_kit_file  # noqa: E402
@@ -203,10 +244,10 @@ from kitcheck.checks.review_guards import (  # noqa: E402
 _HERE = Path(__file__).resolve().parent
 _DEFAULT_VALIDATOR = _HERE / "platform" / "scripts" / "validate_analytics_docs.py"
 
-# служебные файлы миграции — в docs-репозиторий не переезжают
-_SKIP_NAMES = {"open-questions.md", "feedback.md", "coordination-log.md",
-               "coordination-state.md"}
-_SKIP_SUFFIXES = (".filled.md", ".tables.md")
+# служебные файлы миграции — в docs-репозиторий не переезжают; перечень — kitcheck/md.py
+# (один дом с matrix_sync: их ID в «Реестр ID» не выводятся)
+_SKIP_NAMES = MIGRATION_SERVICE_NAMES
+_SKIP_SUFFIXES = MIGRATION_SERVICE_SUFFIXES
 _SKIP_DIRS = {"prompts", "sandbox", "sources", "confluence", "__pycache__",
               ".git"}
 # файлы корня docs-репозитория, которые не являются комплектом (режим репозитория
@@ -234,6 +275,7 @@ _SELFCHECK_CRITERIA = (
     ("относительные ссылки", "CORE-06"),
     ("условные обозначения README", "SDLC-08"),
     ("матрица «API ↔ SRS»", "TRF-05"),
+    ("матрица «Покрытие: API ↔ SRS»", "SDLC-04"),
     ("контракты в комплекте", "TRF-03"),
     ("файл-артефакт", "CORE-09"),
     ("битая ссылка на files", "CORE-09"),
@@ -250,21 +292,18 @@ _VALIDATOR_CRITERIA = {
     "E_KIT_DOCS_WRAPPER": "TRF-01",
 }
 
-# закрытый набор `type` платформы (канон платформы §8 / паспорт ЭКО §8); типы комплекта
-# вне набора платформа читает «как документ без навыка» — их перечень идёт в отчёт как
-# исключения к согласованию (комментарий платформы к SDLC-01, 13.10.2026)
-_PLATFORM_TYPES = {"vision", "glossary", "feature", "use-case", "business-rules", "process",
-                   "data-model", "function", "screen-form", "control", "print-form",
-                   "contract-call", "notification", "rbac", "platform-function",
-                   "external-integration"}
+# закрытый набор `type` платформы — один дом с самопроверкой: ids_domain.PLATFORM_TYPES
+_PLATFORM_TYPES = PLATFORM_TYPES
+_README_MATRIX_LINK_RE = re.compile(r"\]\((?:\./)?traceability-matrix\.md(?:#[^)]*)?\)")
 _SERVICE_DIRS = {"examples", "files", "img", "assets", "images",
                  "tasks"}  # постановки задач forward (type: task) — не карточки
 _EXT_LINK_RE = re.compile(r"\]\((https?://[^)\s]+)")
 _OQ_REF_RE = re.compile(r"\bOQ-\d+\b")
 # критерии раздела 1, у которых автоматической проверки нет — ручная с доказательством
 _MANUAL_SECTION1 = (
-    ("SDLC-02", "внешние контракты в docs-external-contracts и обратные ссылки — наличие ссылок из "
-                "карточек CALL-EXT и строки «Потребители» в контракте"),
+    ("SDLC-02", "обратные ссылки от внешних контрактов к потребителям — строки «Потребители» в "
+                "контракте docs-external-contracts (ссылки из карточек CALL-EXT на базовый контракт "
+                "проверяет гейт)"),
     ("SDLC-03", "справочники в Git и связь в обе стороны — до решения канона о владельце общих "
                 "справочников и обратном индексе"),
     ("CORE-09", "внешние ссылки (http) — доступность для платформы и агентов; гейт даёт только "
@@ -285,6 +324,8 @@ _MANUAL_BEFORE_CONNECT = (
                 "(приложен ниже) — отчёт, не READY"),
     ("SDLC-01", "типы и поля вне набора платформы (перечень в таблице гейта, TRF-04) — "
                 "согласовать как исключения по стандарту платформы"),
+    ("SDLC-06", "независимая сверка BRD с карточками (verify-brd-vs-srs) выполнена, отчёт "
+                "приложен — механически не проверяется"),
 )
 
 
@@ -294,6 +335,8 @@ _DEFAULT_CHECK = {
     "SDLC-08": "README комплекта", "SDLC-09": "идентификаторы и frontmatter",
     "CORE-06": "относительные ссылки", "CORE-09": "ссылки и артефакты",
     "CORE-20": "открытые вопросы и долги", "FMT-01": "структурные файлы",
+    "CORE-05": "версия комплекта", "SDLC-06": "слой BRD",
+    "SDLC-02": "внешний вызов → базовый контракт",
     "TRF-01": "корень без обёртки docs/", "TRF-02": "служебные файлы миграции",
     "TRF-03": "контракты в комплекте", "TRF-04": "типы документов объявлены",
     "TRF-05": "межрепозиторные ссылки", "ПРИБОР": "прибор selfcheck",
@@ -367,6 +410,17 @@ _AFTER_STEP_DOWNGRADE = (
     ("⚠", "SDLC-05", "service-vision.md", "i"),
     ("⚠", "SDLC-05", "glossary.md", "i"),
     ("✗", "SDLC-04", "матрица: раздел «Покрытие: API ↔ SRS»", "⚠"),
+    # проверки переноса 2026-11-19 (П1–П3): в ходе миграции — предупреждение
+    ("✗", "SDLC-04", "матрица: структура", "⚠"),
+    ("✗", "SDLC-09", "матрица: реестр ID", "⚠"),
+    ("✗", "SDLC-04", "матрица: покрытия", "⚠"),
+    # П6–П8: слой BRD, секции и гейты, ссылки между слоями
+    ("✗", "SDLC-06", "слой BRD", "⚠"),
+    ("✗", "SDLC-06", "секции и гейты BRD", "⚠"),
+    ("✗", "SDLC-01", "ссылки между слоями BRD и SRS", "⚠"),
+    # П9, П11: тип вне набора не описан; внешний вызов без базового контракта
+    ("✗", "TRF-04", "типы документов", "⚠"),
+    ("✗", "SDLC-02", "внешний вызов → базовый контракт", "⚠"),
 )
 # корень целевой раскладки (лёгкий режим, Д-49): штатные каталоги комплекта в корне
 # репозитория документации. api/ — отдельный блокер TRF-03, здесь не дублируется; служебные
@@ -597,6 +651,122 @@ def open_questions(src_root: Path, docs: Path, sources: Optional[Path] = None,
     return None, []
 
 
+# --- матрица: структура, реестр ID, покрытия (постановка 2026-11-19, П1–П3) ---
+#
+# Сверку выводимых разделов гейт делает сам (matrix_sync), а не через обёртку selfcheck: та при
+# любом отклонении структуры печатает одну строку «i … сверка пропущена», и комплект с матрицей,
+# расходящейся с документами, проходил гейт без строки о связях. Решения владельца 19.11:
+# порядок шести разделов при верном составе — ⚠, прочие отклонения структуры — ✗; сверка
+# разделов идёт при любой структуре; расхождение реестра — ✗ (кроме «ID только упоминается» —
+# ⚠); расхождение покрытий функций и процессов, в том числе недостающая колонка шаблона, — ✗ с
+# командой пересборки; «Источники миграции» — ⚠ (происхождение, не связи). В режиме --after-step
+# все эти строки — ⚠ (_AFTER_STEP_DOWNGRADE).
+
+def _sync_parts(lines: List[str], limit: int = 3) -> List[str]:
+    """Строки отчёта matrix_sync («   вид ×N: a; b; …») → «вид ×N (a, b, c…)»."""
+    out = []
+    for ln in lines:
+        head, sep, items = ln.strip().partition(": ")
+        if not sep or "×" not in head:
+            out.append(ln.strip())
+            continue
+        its = [x.strip() for x in items.split("; ") if x.strip() and x.strip() != "…"]
+        out.append(f"{head} ({', '.join(its[:limit])}{'…' if len(its) > limit else ''})")
+    return out
+
+
+def check_matrix_sync(gate: Gate, staged: Path, docs: Path) -> None:
+    matrix = staged / ms.MATRIX
+    cmd = f"matrix_sync.py --docs {docs.as_posix()} --write"
+    try:
+        text = matrix.read_text(encoding="utf-8", errors="replace").replace("\r\n", "\n")
+        sections = ms.parse_matrix(text)
+        kit = ms.Kit(staged, matrix)
+        found = ms.structure_findings(sections)
+    except Exception as e:  # noqa: BLE001
+        gate.add("✗", "SDLC-04", f"сверка матрицы упала: {e!r} — связи не проверены",
+                 check="матрица: структура")
+        return
+    block = [t for c, t in found if c == ms.BLOCK]
+    if block:
+        gate.add("✗", "SDLC-04", f"структура матрицы не по шаблону ×{len(found)}: "
+                 + "; ".join(t for _c, t in found)
+                 + " — раздел вне шаблона переносится в приложение «## Приложение. …» после "
+                   "разделов шаблона; пересборка matrix_sync.py --write до исправления структуры "
+                   "не работает", check="матрица: структура")
+    elif found:
+        gate.add("⚠", "SDLC-04", f"{found[0][1]} — сверка разделов выполнена, --write порядок "
+                 "сохраняет; перестановка — вручную", check="матрица: структура")
+    else:
+        gate.add("✓", "SDLC-04", "структура матрицы по шаблону", check="матрица: структура")
+    by_key: Dict[str, "ms.Section"] = {}
+    for s in sections:
+        by_key.setdefault(s.key, s)
+    reg = by_key.get("registry")
+    if reg is not None:
+        try:
+            rf = ms.registry_findings(reg, kit)
+        except Exception as e:  # noqa: BLE001
+            rf = [(f"сверка упала: {e!r}", ["—"])]
+        soft_kinds = (ms.REG_MENTION, ms.REG_SERVICE)
+        hard = [(k, v) for k, v in rf if k not in soft_kinds]
+        miss = ms.missing_template_columns(reg)
+        if miss:
+            hard.append((f"нет колонки {', '.join(f'«{c}»' for c in miss)} — --write добавит",
+                         []))
+        def _fmt(items):  # noqa: E306
+            return "; ".join(f"{k}" + (f" ×{len(v)} ({', '.join(v[:5])}"
+                                       f"{'…' if len(v) > 5 else ''})" if v else "")
+                             for k, v in items)
+        if hard:
+            gate.add("✗", "SDLC-09", f"«{reg.title}» расходится с документами: {_fmt(hard)} — "
+                     f"строки из документов вносит пересборка ({cmd}), снятие ID — ручной строкой "
+                     "реестра (conventions §5)", check="матрица: реестр ID")
+        mention = [(k, v) for k, v in rf if k in soft_kinds]
+        if mention:
+            gate.add("⚠", "SDLC-09", f"«{reg.title}»: {_fmt(mention)}", check="матрица: реестр ID")
+        if not hard and not mention:
+            gate.add("✓", "SDLC-09", f"«{reg.title}» совпадает с документами",
+                     check="матрица: реестр ID")
+    for key, types, cols in (("fun", {"function"}, ms.FUN_COLS),
+                             ("proc", {"process"}, ms.PROC_COLS)):
+        sec = by_key.get(key)
+        if sec is None:
+            continue
+        try:
+            lines, _only = ms.check_coverage(sec, kit, types, cols)
+        except Exception as e:  # noqa: BLE001
+            lines = [f"сверка упала: {e!r}"]
+        parts = _sync_parts(lines)
+        miss = ms.missing_template_columns(sec)
+        if miss:
+            parts.append(f"нет колонки {', '.join(f'«{c}»' for c in miss)}")
+        if parts:
+            gate.add("✗", "SDLC-04", f"«{sec.title}» расходится с документами: "
+                     + "; ".join(parts) + f" — связь вносится в тело документа, раздел "
+                     f"пересобирается: {cmd}", check="матрица: покрытия")
+        else:
+            gate.add("✓", "SDLC-04", f"«{sec.title}» совпадает с документами",
+                     check="матрица: покрытия")
+    src_sec = by_key.get("sources")
+    if src_sec is not None:
+        try:
+            lines = ms.check_sources(src_sec, kit)
+        except Exception as e:  # noqa: BLE001
+            lines = [f"сверка упала: {e!r}"]
+        parts = _sync_parts(lines)
+        miss = ms.missing_template_columns(src_sec)
+        if miss:
+            parts.append(f"нет колонки {', '.join(f'«{c}»' for c in miss)}")
+        if parts:
+            gate.add("⚠", "SDLC-04", f"«{src_sec.title}» расходится с документами: "
+                     + "; ".join(parts) + f" — раздел о происхождении, не о связях; пересборка: "
+                     f"{cmd}", check="матрица: источники миграции")
+        else:
+            gate.add("✓", "SDLC-04", f"«{src_sec.title}» совпадает с документами",
+                     check="матрица: источники миграции")
+
+
 def check_transfer_conditions(gate: Gate, src_root: Path, docs: Path,
                               staged: Path, docs_repo: bool = False,
                               sources: Optional[Path] = None,
@@ -705,27 +875,14 @@ def check_transfer_conditions(gate: Gate, src_root: Path, docs: Path,
             gate.add("✗", "CORE-20", ln[2:] if ln.startswith(("✗ ", "⚠ ")) else ln,
                      check="форма закрытия вопросов")
     if matrix.is_file():
-        am = sc._API_SECTION_RE.search(mtext)
-        if am:
-            tail = mtext[am.end():]
-            nxt = re.search(r"^#{1,2}\s", tail, re.M)
-            sect = tail[:nxt.start()] if nxt else tail
-            rows = [ln for ln in sect.splitlines()
-                    if ln.strip().startswith("|") and not re.match(r"^\|[\s:|-]+\|?$", ln.strip())]
-            ops = max(0, len(rows) - 1)  # минус шапка
-            intc = sum(1 for f in staged.rglob("*.md")
-                       if _fm(f).get("type") == "internal-contract")
-            if ops == 0 and intc:
-                gate.add("⚠", "SDLC-04", f"раздел есть, но пуст, а в комплекте {intc} описаний "
-                         "собственных методов (internal-contract) — проверьте, есть ли у сервиса "
-                         "API-операции и указаны ли их связи с требованиями: описание метода ещё не "
-                         "означает, что для него есть API-контракт (пустой раздел допустим только при "
-                         "отсутствии операций)",
-                         check="матрица: раздел «Покрытие: API ↔ SRS»")
-            else:
-                gate.add("✓", "SDLC-04", "раздел есть" + (f", операций {ops}" if ops else
-                                                        " (пуст — API-слой не ведётся)"),
-                         check="матрица: раздел «Покрытие: API ↔ SRS»")
+        check_matrix_sync(gate, staged, docs)
+        cov = api_coverage(staged)
+        if cov and cov["section"]:
+            # П4–П5 (постановка 2026-11-19): пустой раздел при карточках собственных методов без
+            # причины в шапке раздела и карточка метода в контуре Экосистемы, не названная в
+            # разделе, — ✗; карточки части вне контура и README-реестры не считаются
+            for mark, text in api_coverage_lines(cov):
+                gate.add(mark, "SDLC-04", text, check="матрица: раздел «Покрытие: API ↔ SRS»")
         else:
             gate.add("✗", "SDLC-04", "раздела нет — "
                      "планировщик платформы определяет по нему репозитории кода; "
@@ -783,27 +940,26 @@ def check_transfer_conditions(gate: Gate, src_root: Path, docs: Path,
     # TRF-04 / SDLC-01: типы документов вне закрытого набора платформы — перечень
     # исключений к согласованию (комментарий платформы: объявление в README не равно
     # согласованию, если стандарт требует согласования)
-    types: Dict[str, int] = {}
-    for f in staged.rglob("*.md"):
-        t = _fm(f).get("type")
-        if t:
-            types[t] = types.get(t, 0) + 1
-    outside = {t: n for t, n in types.items() if t not in _PLATFORM_TYPES}
-    if outside:
-        prefix_of = {"internal-contract": "INTC", "lib-contract": "LIBC", "agent": "CHD",
-                     "platform-function": "PLT", "status-model": "SM", "instruction": "INS",
-                     "script": "SCRP", "module-passport": "BND"}
-        declared = bool(rtext) and all(
-            t in rtext or f"**{prefix_of.get(t, '')}**" in rtext for t in outside)
-        gate.add("i", "TRF-04", "типы вне закрытого набора платформы: "
-                 + ", ".join(f"{t} ×{n}" for t, n in sorted(outside.items()))
-                 + (" — объявлены в README комплекта; согласование исключений — по стандарту "
-                    "платформы (SDLC-01)" if declared else
-                    " — в README комплекта не описаны (таблица типов «Условных обозначений»)"),
-                 check="типы документов")
-    elif types:
-        gate.add("✓", "TRF-04", "все типы комплекта в закрытом наборе платформы",
-                 check="типы документов")
+    # П9 (постановка 2026-11-19): тип вне набора, не описанный в README, — ✗ (прежде i); описан —
+    # i «исключение к согласованию»; тип из набора, не описанный, — ⚠. «Описан» — токен типа в
+    # «Условных обозначениях» либо объявленный ID-префикс его документов (префикс — из комплекта,
+    # не из словаря); один дом с самопроверкой — ids_domain.doc_types
+    for mark, text in doc_types_lines(doc_types(sorted(staged.rglob("*.md")), rtext),
+                                      readme=readme.is_file()):
+        gate.add(mark, "TRF-04", text, check="типы документов")
+    # П10: README — точка входа: ссылка на матрицу трассировки (SDLC-08); подраздел «Долги по
+    # ссылкам» проверяется строкой CORE-20 «перенесённые долги»
+    if readme.is_file():
+        if _README_MATRIX_LINK_RE.search(rtext):
+            gate.add("✓", "SDLC-08", "README ссылается на traceability-matrix.md",
+                     check="README: ссылка на матрицу")
+        else:
+            gate.add("⚠", "SDLC-08", "README не ссылается на traceability-matrix.md — внешний "
+                     "читатель не найдёт матрицу трассировки из точки входа",
+                     check="README: ссылка на матрицу")
+    # П11: карточка внешнего вызова ведёт к базовому контракту (SDLC-02)
+    for mark, text in call_ext_lines(call_ext_without_contract(staged)):
+        gate.add(mark, "SDLC-02", text, check="внешний вызов → базовый контракт")
     # SDLC-08: каталоги карточек без README-реестра
     no_readme: List[str] = []
     for d in sorted({f.parent for f in staged.rglob("*.md") if _fm(f).get("id")}):
@@ -867,6 +1023,40 @@ def check_transfer_conditions(gate: Gate, src_root: Path, docs: Path,
                         " — README не объясняет раздел «Долги по ссылкам» "
                         "(подраздел «Условных обозначений», шаблон docs-readme.md)"),
                      check="перенесённые долги")
+
+
+# --- слой BRD (постановка 2026-11-19, П6–П8) -------------------------------------
+#
+# Признаки и правила — kitcheck/checks/brd.py (один дом с самопроверкой, где эти строки — ⚠).
+# Здесь — знаки полного режима: нет слоя у продуктового сервиса (или сервис не найден, каталог
+# недоступен) — ✗, отсрочка ключом --brd-deferred — ⚠; секции и гейты BRD-5 — ✗, пересчёт трёх
+# счётчиков — ⚠; ссылка между слоями из тела документа — ✗; файлы README.md — навигация, проверкой
+# не рассматриваются.
+
+def check_brd(gate: Gate, staged: Path, catalog: Optional[Path],
+              deferred: Optional[str]) -> dict:
+    try:
+        info = brd_layer(staged, catalog)
+    except Exception as e:  # noqa: BLE001
+        gate.add("✗", "SDLC-06", f"проверка слоя BRD упала: {e!r}", check="слой BRD")
+        return {}
+    for mark, text in brd_layer_lines(info, deferred):
+        gate.add(mark, "SDLC-06", text, check="слой BRD")
+    if not info["brd"]:
+        return info
+    try:
+        for mark, chk, text in brd_gates_lines(staged):
+            gate.add(mark, "SDLC-06", text, check=chk)
+        links = layer_links_lines(layer_links(staged))
+    except Exception as e:  # noqa: BLE001
+        gate.add("✗", "SDLC-06", f"проверка секций BRD упала: {e!r}", check="секции и гейты BRD")
+        return info
+    for mark, text in links:
+        gate.add(mark, "SDLC-01", text, check="ссылки между слоями BRD и SRS")
+    if not links:
+        gate.add("✓", "SDLC-01", "ссылок между слоями BRD и SRS нет (conventions §5.4)",
+                 check="ссылки между слоями BRD и SRS")
+    return info
 
 
 # --- долги на собственный заход -------------------------------------------------
@@ -1462,6 +1652,76 @@ def check_target_repo(gate: Gate, out: Optional[Path], in_place: bool = False) -
             gate.add("⚠", "SDLC-07", f"gpb-manifest.json: {issue}", check="манифест")
 
 
+# --- версия комплекта (CORE-05, постановка 2026-11-19, П12) ----------------------
+#
+# Перенос только из зафиксированной версии: при --out незакоммиченные изменения в каталоге
+# комплекта (без служебных файлов миграции, которые не переносятся) — ✗, версию комплекта нельзя
+# получить повторно; без --out — ⚠ (проверено рабочее дерево; шапка отчёта говорит то же о
+# репозитории). Каталог не под git: при --out — ✗ (сомнение — в сторону отказа), без — i.
+
+def kit_dirty(docs: Path) -> Optional[List[str]]:
+    """Пути каталога комплекта с незакоммиченными изменениями (относительно комплекта; без
+    служебных файлов миграции); None — каталог не под git или git недоступен."""
+    def g(*args: str) -> Optional[subprocess.CompletedProcess]:
+        try:
+            return subprocess.run(["git", "-C", str(docs), *args], capture_output=True,
+                                  timeout=60)
+        except (OSError, subprocess.SubprocessError):
+            return None
+    top = g("rev-parse", "--show-toplevel")
+    if top is None or top.returncode != 0 or not top.stdout.strip():
+        return None
+    root = Path(top.stdout.decode("utf-8", "replace").strip()).resolve()
+    st = g("status", "--porcelain=v1", "-z", "--untracked-files=all", "--", ".")
+    if st is None or st.returncode != 0:
+        return None
+    toks = st.stdout.decode("utf-8", "replace").split("\0")
+    out: List[str] = []
+    n = 0
+    while n < len(toks):
+        tok = toks[n]
+        n += 1
+        if len(tok) < 4:
+            continue
+        code, path = tok[:2], tok[3:]
+        if code[0] in "RC":
+            n += 1  # -z: за переименованием идёт прежний путь
+        try:
+            rel = (root / path).resolve().relative_to(docs.resolve())
+        except ValueError:
+            continue
+        if (any(part in _SKIP_DIRS or part.startswith(".") for part in rel.parts)
+                or rel.name in _SKIP_NAMES or rel.name.endswith(_SKIP_SUFFIXES)):
+            continue
+        out.append(rel.as_posix())
+    return out
+
+
+def check_kit_version(gate: Gate, docs: Path, out: Optional[Path]) -> None:
+    dirty = kit_dirty(docs)
+    if dirty is None:
+        if out is not None:
+            gate.add("✗", "CORE-05", "каталог комплекта не под git — версию комплекта нельзя "
+                     "получить повторно; перенос — только из коммита", check="версия комплекта")
+        else:
+            gate.add("i", "CORE-05", "каталог комплекта не под git — версия не фиксируется",
+                     check="версия комплекта")
+        return
+    if dirty:
+        what = f"{len(dirty)} ({', '.join(dirty[:5])}{'…' if len(dirty) > 5 else ''})"
+        if out is not None:
+            gate.add("✗", "CORE-05", f"перенос из рабочего дерева: версию комплекта нельзя получить "
+                     f"повторно — незакоммиченных изменений в каталоге комплекта {what}; "
+                     "закоммитить и повторить", check="версия комплекта")
+        else:
+            gate.add("⚠", "CORE-05", f"незакоммиченные изменения в каталоге комплекта: {what} — "
+                     "проверено рабочее дерево, не коммит; перенос (--out) — только из коммита",
+                     check="версия комплекта")
+        return
+    gate.add("✓", "CORE-05", "каталог комплекта без незакоммиченных изменений",
+             check="версия комплекта")
+
+
 # --- оркестровка ----------------------------------------------------------------
 
 def detect_layout(src_root: Path, docs_name: str) -> Tuple[Optional[Path], bool]:
@@ -1493,7 +1753,8 @@ def run_gate(src_root: Path, docs_name: str = "docs", out: Optional[Path] = None
              baseline: Optional[Path] = None,
              own_debts: str = "warn",
              inventory: Optional[Path] = None, raw: Optional[Path] = None,
-             bundle: Optional[Path] = None) -> Tuple[List[str], bool, dict]:
+             bundle: Optional[Path] = None, catalog: Optional[Path] = None,
+             brd_deferred: Optional[str] = None) -> Tuple[List[str], bool, dict]:
     """fmt: "log" — журнал в порядке проверок (по умолчанию для вызова из кода и
     тестов); "table" — markdown-таблица с группировкой и легендой меток.
 
@@ -1596,10 +1857,13 @@ def run_gate(src_root: Path, docs_name: str = "docs", out: Optional[Path] = None
             run_selfcheck(gate, staged, sources, strict, kit_files[0], raw, bundle, kit)
         check_transfer_conditions(gate, src_root, docs, staged, docs_repo,
                                   sources, questions, kit)
+        # каталог сервисов: явный --catalog сильнее каталога канона рядом с прибором
+        brd_info = check_brd(gate, staged, catalog or sc.canon_catalog_path(), brd_deferred)
         if after_step:
             gate.downgrade(_AFTER_STEP_DOWNGRADE, _AFTER_STEP_NOTE)
         own = check_own_debts(gate, staged, docs, after_step, own_debts, kit_files)
         check_target_repo(gate, docs if docs_repo else out, in_place=docs_repo)
+        check_kit_version(gate, docs, out)
         if no_validator:
             gate.add("⚠", "ВАЛИДАТОР", "валидатор платформы отключён ключом "
                      "--no-validator — структурная половина гейта не выполнена")
@@ -1676,6 +1940,10 @@ def run_gate(src_root: Path, docs_name: str = "docs", out: Optional[Path] = None
                               "inventory": str(kit_files[0]) if kit_files[0] else None,
                               "strict": strict, "debts": debts_rows, "own_debts": own,
                               "docs_repo": docs_repo,
+                              "brd_deferred": (brd_deferred if brd_deferred is not None
+                                               and not (brd_info or {}).get("brd")
+                                               and not (brd_info or {}).get("platform")
+                                               else None),
                               "src_git": src_git_state(src_root),
                               "validator": validator_origin(validator or _DEFAULT_VALIDATOR,
                                                             layout, no_validator)}
@@ -1824,6 +2092,8 @@ def write_report(path: Path, src_root: Path, table_lines: List[str], data: dict)
             f"{data.get('validator') or 'не запускался'}. Инструмент — `transfer_gate.py`; "
             "таблица — приложение к протоколу самопроверки чек-листа DoR (раздел «Технологическая "
             "совместимость»).", ""]
+    if data.get("brd_deferred"):
+        head += [f"Слой BRD отложен (--brd-deferred): {data['brd_deferred']}.", ""]
     body = list(table_lines)
     # реестр долгов (комментарии платформы 13.10: до подключения обязателен реестр долгов с
     # владельцем; долг ограничивает использование карточки FROM-ID до закрытия)
@@ -1866,6 +2136,9 @@ def write_report(path: Path, src_root: Path, table_lines: List[str], data: dict)
              "Гейт закрывает автоматические критерии раздела 1. До технического подключения человек "
              "дополнительно подтверждает (комментарии платформы к DoR v1.2, 13.10.2026):", ""]
     body += [f"- **{c}** — {t}" for c, t in _MANUAL_BEFORE_CONNECT]
+    if data.get("brd_deferred"):
+        body.append(f"- **SDLC-06** — слой BRD отложен ключом --brd-deferred: {data['brd_deferred']}; "
+                    "подтверждает владелец документации")
     body += ["", "Критерии раздела 1 без автоматической проверки (ручная с доказательством):", ""]
     body += [f"- **{c}** — {t}" for c, t in _MANUAL_SECTION1]
     body += ["", "Поля решения (заполняет владелец): разрешённый объём разработки; запрещённый или "
@@ -1921,6 +2194,12 @@ def main() -> int:
                     help="архив выгрузки sources/raw для прибора (как selfcheck --raw)")
     ap.add_argument("--bundle", type=Path, default=None,
                     help="каталог бандла экспортёра для сверки по архиву raw (как selfcheck --bundle)")
+    ap.add_argument("--catalog", type=Path, default=None,
+                    help="каталог сервисов services.json (по умолчанию — _meta/services.json канона "
+                         "рядом с прибором): платформенный сервис для проверки слоя BRD")
+    ap.add_argument("--brd-deferred", default=None, metavar="ТЕКСТ",
+                    help="отсрочка слоя BRD продуктового сервиса: \"<основание>; ответственный: "
+                         "<кто>; срок: <ГГГГ-ММ-ДД>\" — вместо ✗ строка ⚠, текст — в шапку отчёта")
     a = ap.parse_args()
     fmt = "log" if a.log else "table"
     try:
@@ -1932,7 +2211,9 @@ def main() -> int:
                                       a.after_step, a.baseline, a.own_debts,
                                       a.inventory.resolve() if a.inventory else None,
                                       a.raw.resolve() if a.raw else None,
-                                      a.bundle.resolve() if a.bundle else None)
+                                      a.bundle.resolve() if a.bundle else None,
+                                      a.catalog.resolve() if a.catalog else None,
+                                      a.brd_deferred)
     except Exception as e:  # noqa: BLE001
         print(f"✗ гейт не отработал: {e!r}")
         return 2

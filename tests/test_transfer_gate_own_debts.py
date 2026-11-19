@@ -10,7 +10,8 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "app" / "scripts" / "CI"))
 import transfer_gate as tg  # noqa: E402
-from tests.test_transfer_gate import _CARD, _MATRIX, _README, _w, make_src  # noqa: E402
+from tests.test_transfer_gate import (  # noqa: E402,F401 — platform_catalog: сервис X платформенный
+    _CARD, _MATRIX_BASE, _README, _w, make_src, platform_catalog)
 
 _INV_HEAD = ("# Опись\n\n| page_id | title | родитель | req_type | целевой тип (гипотеза) | основание |\n"
              "|---|---|---|---|---|---|\n")
@@ -33,7 +34,7 @@ def _debt(rest: str) -> str:
 
 
 def _matrix(*rows: str) -> str:
-    return (_MATRIX + "\n## 4. Долги по ссылкам\n\n| FROM-ID | Цель | Долг |\n|---|---|---|\n"
+    return (_MATRIX_BASE + "\n## 4. Долги по ссылкам\n\n| FROM-ID | Цель | Долг |\n|---|---|---|\n"
             + "".join(rows))
 
 

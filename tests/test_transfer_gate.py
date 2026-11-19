@@ -11,13 +11,25 @@ import transfer_gate as tg  # noqa: E402
 _README = ("# К\n\n## Условные обозначения\n\n| Префикс | Что |\n|---|---|\n"
            "| **VIS** | Концепция |\n| **GLO** | Глоссарий |\n| **FUN** | Функция |\n\n"
            "### Поля frontmatter\n\n| Поле | Назначение |\n|---|---|\n| `title` | наименование |\n\n"
-           "## Разделы\n")
+           "## Разделы\n\n- [Матрица трассировки](traceability-matrix.md)\n")
 _CARD = ("---\nid: FUN-CL-01\ntitle: 'Ф'\ntype: function\nservice: X\n---\n\n"
          "# Ф\n\nсм. [матрицу](../../../traceability-matrix.md)\n")
-_MATRIX = ("# Матрица\n\n## 1. Реестр ID\n\n| ID | Тип | Наименование | Файл |\n"
-           "|---|---|---|---|\n| FUN-CL-01 | function | Ф | srs/function/client/fun-cl-01-f1.md |\n"
-           "| VIS-001 | vision | В | service-vision.md |\n| GLO-001 | glossary | Г | glossary.md |\n\n"
-           "## 3. Покрытие: API ↔ SRS\n\n| Операция | Артефакты SRS |\n| --- | --- |\n")
+# матрица по шаблону канона (шесть разделов; проверка структуры гейтом — П1, 2026-11-19):
+# _MATRIX_BASE — без раздела долгов (тесты дописывают свой), _MATRIX — с пустым разделом долгов
+_FUN_HDR = ("| Функция | Название | Вызовы | Экраны | Данные | Контроли | Уведомления | Печатные формы |\n"
+            "| --- | --- | --- | --- | --- | --- | --- | --- |\n")
+_API_SEC = "## Покрытие: API ↔ SRS\n\n| Операция | Артефакты SRS |\n| --- | --- |\n\n"
+_MATRIX_BASE = ("# Матрица\n\n## Реестр ID\n\n| ID | Название | Файл |\n| --- | --- | --- |\n"
+                "| FUN-CL-01 | Ф | `srs/function/client/fun-cl-01-f1.md` |\n"
+                "| VIS-001 | В | `service-vision.md` |\n| GLO-001 | Г | `glossary.md` |\n\n"
+                "## Покрытие: функции → артефакты\n\n" + _FUN_HDR
+                + "| FUN-CL-01 | Ф | — | — | — | — | — | — |\n\n"
+                "## Покрытие: процессы → артефакты\n\n| Процесс | Название | Вызывает | Функции | Вызовы | "
+                "Уведомления | Экраны | Контроли | Данные | Печатные формы |\n"
+                "| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |\n\n"
+                + _API_SEC
+                + "## Источники миграции\n\n| Page ID | Целевые артефакты | Основание |\n| --- | --- | --- |\n")
+_MATRIX = _MATRIX_BASE + "\n## Долги по ссылкам\n\n| Артефакт | Цель | Причина |\n| --- | --- | --- |\n"
 _OQ_CLOSED = "# Открытые вопросы\n\n## OQ-001. Вопрос\n- **Статус:** закрыт\n- **Решение:** да\n"
 _OQ_OPEN = _OQ_CLOSED + "\n## OQ-002. Ещё\n- **Статус:** открыт\n"
 
@@ -25,6 +37,17 @@ _OQ_OPEN = _OQ_CLOSED + "\n## OQ-002. Ещё\n- **Статус:** открыт\n
 def _w(p: Path, text: str) -> None:
     p.parent.mkdir(parents=True, exist_ok=True)
     p.write_text(text, encoding="utf-8")
+
+
+@pytest.fixture(autouse=True)
+def platform_catalog(tmp_path_factory, monkeypatch):
+    """Каталог сервисов тестов гейта: сервис X тестовых комплектов — платформенный, слой BRD к нему
+    не применяется (П6, 2026-11-19). Модули, которые импортируют эту фикстуру, получают её же."""
+    cat = tmp_path_factory.mktemp("catalog") / "services.json"
+    cat.write_text('[{"code": "X", "key": "XX", "name": "X", "is_platform": true}]\n',
+                   encoding="utf-8")
+    monkeypatch.setattr(tg.sc, "canon_catalog_path", lambda: cat)
+    return cat
 
 
 def make_src(tmp_path: Path, oq: str = _OQ_CLOSED, matrix: str = _MATRIX) -> Path:
@@ -41,6 +64,15 @@ def make_src(tmp_path: Path, oq: str = _OQ_CLOSED, matrix: str = _MATRIX) -> Pat
     return src
 
 
+def git_commit(src: Path) -> Path:
+    """Комплект под git и закоммичен: перенос (--out) — только из коммита (П12, 2026-11-19)."""
+    import subprocess
+    for args in (("init", "-q"), ("config", "user.email", "t@local"), ("config", "user.name", "t"),
+                 ("config", "core.autocrlf", "false"), ("add", "-A"), ("commit", "-q", "-m", "k")):
+        subprocess.run(["git", "-C", str(src), *args], check=True, capture_output=True)
+    return src
+
+
 def _run(src: Path, **kw):
     kw.setdefault("no_validator", True)
     return tg.run_gate(src, **kw)
@@ -52,7 +84,7 @@ def test_ready_without_validator(tmp_path):
     assert lines[-1].startswith("ИТОГ: READY — блокеров 0")
     assert data["verdict"] == "READY"
     assert any("[CORE-20] открытых вопросов без долга нет" in l for l in lines)
-    assert any("[SDLC-04] раздел есть" in l for l in lines)
+    assert any("[SDLC-04] раздел пуст — собственных методов нет" in l for l in lines)
     assert any("[ВАЛИДАТОР] валидатор платформы отключён" in l for l in lines)
 
 
@@ -64,7 +96,7 @@ def test_open_question_blocks(tmp_path):
 
 
 def test_missing_api_section_blocks(tmp_path):
-    m = _MATRIX.split("## 3.")[0]
+    m = _MATRIX.replace(_API_SEC, "")
     lines, ready, _ = _run(make_src(tmp_path, matrix=m))
     assert not ready
     assert any(l.startswith("✗ [SDLC-04] раздела нет") for l in lines)
@@ -106,7 +138,7 @@ def test_out_only_when_ready(tmp_path):
     lines, ready, _ = _run(make_src(tmp_path, oq=_OQ_OPEN), out=out)
     assert not ready and not (out / "traceability-matrix.md").exists()
     assert any(l.startswith("✗ --out пропущен") for l in lines)
-    lines, ready, _ = _run(make_src(tmp_path / "b"), out=out)
+    lines, ready, _ = _run(git_commit(make_src(tmp_path / "b")), out=out)
     assert ready and (out / "traceability-matrix.md").is_file()
     assert any("перенесено в" in l and "коммит и MR — человек" in l for l in lines)
 
@@ -169,7 +201,7 @@ _DEBT_RULE = ("### Долги по ссылкам\n\n| Поле поручени
 
 
 def test_debts_require_reading_rule_in_readme(tmp_path):
-    src = make_src(tmp_path, matrix=_MATRIX + _DEBT_ROW)
+    src = make_src(tmp_path, matrix=_MATRIX_BASE + _DEBT_ROW)
     # имена целей долгов упомянуты в карточке дословно — иначе долг неисполним (✗ прибора)
     _w(src / "docs/srs/function/client/fun-cl-01-f1.md", _CARD.replace("см.", "использует «Карта» и «Выпуск»; см."))
     lines, ready, _ = _run(src)
@@ -225,7 +257,7 @@ def test_glossary_absent_ok_in_domain_mode(tmp_path):
 
 
 def test_oq_translated_to_debt_not_blocker(tmp_path):
-    matrix = _MATRIX + ("\n## 5. Долги по ссылкам\n\n| От | — | Долг |\n|---|---|---|\n"
+    matrix = _MATRIX_BASE + ("\n## 5. Долги по ссылкам\n\n| От | — | Долг |\n|---|---|---|\n"
                         "| FUN-CL-01 | — | нет целевого артефакта process «Выпуск» — требуется заход create-process; вопрос OQ-002 |\n")
     src = make_src(tmp_path, oq=_OQ_OPEN, matrix=matrix)
     _w(src / "docs/srs/function/client/fun-cl-01-f1.md", _CARD.replace("см.", "использует «Выпуск»; см."))
@@ -244,7 +276,7 @@ _DEBT_HEAD = "\n## 5. Долги по ссылкам\n\n| От | — | Долг 
 
 def test_oq_translated_to_issue_debt_with_fields(tmp_path):
     # НЕсрабатывание: открытый вопрос переведён строкой второго формата со всеми полями
-    src = make_src(tmp_path, oq=_OQ_OPEN, matrix=_MATRIX + _DEBT_HEAD + _ISSUE_ROW)
+    src = make_src(tmp_path, oq=_OQ_OPEN, matrix=_MATRIX_BASE + _DEBT_HEAD + _ISSUE_ROW)
     _w(src / "docs/README.md", _README.replace("## Разделы\n", _DEBT_RULE + "## Разделы\n"))
     lines, ready, data = _run(src)
     assert ready, "\n".join(lines)
@@ -260,7 +292,7 @@ def test_oq_issue_debt_incomplete_blocks(tmp_path):
     # срабатывание: строка второго формата без ограничения и закрытия — блокер с перечнем полей
     row = ("| FUN-CL-01 | — | долг открытый вопрос: «Что такое сегмент» — причина: нет; "
            "ответственный: аналитик; источник: OQ-002 |\n")
-    src = make_src(tmp_path, oq=_OQ_OPEN, matrix=_MATRIX + _DEBT_HEAD + row)
+    src = make_src(tmp_path, oq=_OQ_OPEN, matrix=_MATRIX_BASE + _DEBT_HEAD + row)
     _w(src / "docs/README.md", _README.replace("## Разделы\n", _DEBT_RULE + "## Разделы\n"))
     lines, ready, _ = _run(src)
     assert not ready
@@ -271,8 +303,11 @@ def test_oq_issue_debt_incomplete_blocks(tmp_path):
 
 def test_debt_register_affected_and_closure(tmp_path):
     # «Затронуто»: карточка, ссылающаяся на FROM-ID, попадает в реестр; условие закрытия по виду
-    src = make_src(tmp_path, matrix=_MATRIX.replace(
-        "| VIS-001 |", "| FUN-CL-02 | function | Ф2 | srs/function/client/fun-cl-02-f2.md |\n| VIS-001 |") + _DEBT_ROW)
+    src = make_src(tmp_path, matrix=_MATRIX_BASE.replace(
+        "| VIS-001 |", "| FUN-CL-02 | Ф2 | `srs/function/client/fun-cl-02-f2.md` |\n| VIS-001 |").replace(
+        "| FUN-CL-01 | Ф | — | — | — | — | — | — |\n",
+        "| FUN-CL-01 | Ф | — | — | — | — | — | — |\n| FUN-CL-02 | Ф2 | — | — | — | — | — | — |\n")
+        + _DEBT_ROW)
     _w(src / "docs/srs/function/client/fun-cl-01-f1.md", _CARD.replace("см.", "использует «Карта» и «Выпуск»; см."))
     _w(src / "docs/srs/function/client/fun-cl-02-f2.md",
        "---\nid: FUN-CL-02\ntitle: 'Ф2'\ntype: function\nservice: X\n---\n\n# Ф2\n\nсм. [Ф](fun-cl-01-f1.md)\n")
@@ -390,12 +425,14 @@ def test_types_outside_platform_set_listed(tmp_path):
     src = make_src(tmp_path)
     _w(src / "docs/srs/internal-contract/README.md", "---\nid: INTC-000\ntype: internal-contract\nservice: X\n---\n# Р\n")
     _w(src / "docs/srs/internal-contract/intc-001.md", "---\nid: INTC-001\ntype: internal-contract\nservice: X\n---\n# М\n")
-    _w(src / "docs/traceability-matrix.md", _MATRIX.replace("| VIS-001 |", "| INTC-000 | internal-contract | Р | srs/internal-contract/README.md |\n| INTC-001 | internal-contract | М | srs/internal-contract/intc-001.md |\n| VIS-001 |"))
+    _w(src / "docs/traceability-matrix.md", _MATRIX.replace("| VIS-001 |", "| INTC-000 | Р | `srs/internal-contract/README.md` |\n| INTC-001 | М | `srs/internal-contract/intc-001.md` |\n| VIS-001 |"))
     _w(src / "docs/README.md", _README.replace("| **FUN** | Функция |", "| **FUN** | Функция |\n| **INTC** | Метод |"))
     lines, ready, _ = _run(src)
     assert any(l.startswith("i [TRF-04] типы вне закрытого набора платформы: internal-contract ×2 — объявлены в README") for l in lines), "\n".join(lines)
-    # пустой раздел API при наличии INTC — предупреждение SDLC-04
-    assert any(l.startswith("⚠ [SDLC-04] раздел есть, но пуст, а в комплекте 2 описаний") for l in lines)
+    # пустой раздел API при карточке метода без причины в шапке — ✗ SDLC-04 (П4, 2026-11-19);
+    # README-реестр методов не считается
+    assert any(l.startswith("✗ [SDLC-04] раздел пуст, а в комплекте карточек собственных методов "
+                            "(internal-contract) 1: INTC-001 —") for l in lines), "\n".join(lines)
 
 
 def test_txt_example_that_parses_is_warned(tmp_path):
@@ -467,7 +504,7 @@ def test_empty_sidecar_is_fmt01_defect(tmp_path):
 def test_catalog_without_readme_warned(tmp_path):
     src = make_src(tmp_path)
     _w(src / "docs/srs/data-model/e1.md", "---\nid: ENT-001\ntype: data-model\nservice: X\n---\n# С\n")
-    _w(src / "docs/traceability-matrix.md", _MATRIX.replace("| VIS-001 |", "| ENT-001 | data-model | С | srs/data-model/e1.md |\n| VIS-001 |"))
+    _w(src / "docs/traceability-matrix.md", _MATRIX.replace("| VIS-001 |", "| ENT-001 | С | `srs/data-model/e1.md` |\n| VIS-001 |"))
     lines, _, _ = _run(src)
     assert any(l.startswith("⚠ [SDLC-08] каталоги с карточками без README-реестра: 2 (srs/data-model, srs/function/client)") for l in lines), "\n".join(lines)
 
@@ -523,7 +560,7 @@ def test_out_target_without_tasks_dir_unchanged(tmp_path):
     # НЕсрабатывание: tasks/ нет (в том числе файл tasks, а не каталог) — переносится
     out = _target(tmp_path)
     _w(out / "tasks", "не каталог\n")
-    lines, ready, _ = _run(make_src(tmp_path), out=out)
+    lines, ready, _ = _run(git_commit(make_src(tmp_path)), out=out)
     assert ready, "\n".join(lines)
     assert not any("TRF-02" in l and "tasks/" in l for l in lines)
     assert (out / "traceability-matrix.md").is_file()
@@ -603,7 +640,7 @@ def test_unrecognized_debt_row_blocks_transfer(tmp_path):
     # обязательство, READY подтвердить нельзя (в самопроверке — ⚠, в гейте — ✗)
     rows = (_DEBT_ROW.rstrip("\n")
             + "\n| FUN-CL-01 | — | уточнить у владельца формат (свободный текст) |\n")
-    src = make_src(tmp_path, matrix=_MATRIX + rows)
+    src = make_src(tmp_path, matrix=_MATRIX_BASE + rows)
     _w(src / "docs/srs/function/client/fun-cl-01-f1.md", _CARD.replace("см.", "использует «Карта» и «Выпуск»; см."))
     _w(src / "docs/README.md", _README.replace("## Разделы\n", _DEBT_RULE + "## Разделы\n"))
     lines, ready, _ = _run(src)
@@ -614,7 +651,7 @@ def test_unrecognized_debt_row_blocks_transfer(tmp_path):
 
 def test_nonstandard_debts_heading_blocks_transfer(tmp_path):
     rows = _DEBT_ROW.replace("## 5. Долги по ссылкам", "## Долги ссылок")
-    src = make_src(tmp_path, matrix=_MATRIX + rows)
+    src = make_src(tmp_path, matrix=_MATRIX_BASE + rows)
     _w(src / "docs/srs/function/client/fun-cl-01-f1.md", _CARD.replace("см.", "использует «Карта» и «Выпуск»; см."))
     _w(src / "docs/README.md", _README.replace("## Разделы\n", _DEBT_RULE + "## Разделы\n"))
     lines, ready, _ = _run(src)

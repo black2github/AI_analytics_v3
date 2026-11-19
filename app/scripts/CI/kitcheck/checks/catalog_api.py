@@ -77,6 +77,22 @@ _API_SECTION_RE = re.compile(r"^#{1,3}\s+(?:\d+\.\s*)?Покрытие:\s*API\s*
                              re.M)
 
 
+def api_section(text: str) -> Optional[Tuple[str, str]]:
+    """Раздел матрицы «Покрытие: API ↔ SRS»: (шапка — текст между заголовком и первой строкой
+    таблицы, раздел целиком после заголовка); None — раздела нет. Раздел тянется до следующего
+    заголовка того же или верхнего уровня (подразделы «### 3.1. REST …» — внутри; docs-sign)."""
+    m = _API_SECTION_RE.search(text)
+    if not m:
+        return None
+    level = len(m.group(0)) - len(m.group(0).lstrip("#"))
+    rest = text[m.end():]
+    nxt = re.search(r"^#{1,%d}\s" % level, rest, re.M)
+    section = rest[:nxt.start()] if nxt else rest
+    first_row = re.search(r"^\|", section, re.M)
+    header = section[:first_row.start()] if first_row else section
+    return header, section
+
+
 _LINK_REF_RE = re.compile(r"https?://[^\s)]+?/-/(?:blob|tree|raw)/([^/\s)]+)/")
 
 
@@ -93,17 +109,10 @@ def check_api_matrix_refs(docs: Path, strict: bool = False
     if not matrix.is_file():
         return [], True
     text = _fs.read_text(matrix, encoding="utf-8", errors="replace")
-    m = _API_SECTION_RE.search(text)
-    if not m:
+    sect = api_section(text)
+    if sect is None:
         return [], True
-    level = len(m.group(0)) - len(m.group(0).lstrip("#"))
-    rest = text[m.end():]
-    # раздел тянется до следующего заголовка того же или верхнего уровня
-    # (подразделы «### 3.1. REST …» — внутри; docs-sign)
-    nxt = re.search(r"^#{1,%d}\s" % level, rest, re.M)
-    section = rest[:nxt.start()] if nxt else rest
-    first_row = re.search(r"^\|", section, re.M)
-    header = section[:first_row.start()] if first_row else section
+    header, section = sect
     used = _LINK_REF_RE.findall(section)
     # объявленный ref — токен в обратных кавычках шапки, который реально
     # стоит в ссылках раздела (прочие кавычки шапки — пути, ID — не ref)

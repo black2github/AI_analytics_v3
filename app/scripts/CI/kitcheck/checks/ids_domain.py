@@ -315,3 +315,73 @@ def check_readme_legend(docs: Path, card_ids: Dict[Path, str]) -> List[str]:
         report.append(f"таблица кодов частей озаглавлена «{pm.group(0).strip('# ')}» "
                       "— внешние читатели ищут её по имени «Подсервисы»")
     return report
+
+
+# --- типы документов объявлены (гейт переноса TRF-04, постановка 2026-11-19, П9) ---
+#
+# Закрытый набор `type` платформы (канон платформы §8 / паспорт ЭКО §8): типы комплекта вне набора
+# платформа читает «как документ без навыка» — их перечень идёт в отчёт гейта как исключения к
+# согласованию (комментарий платформы к SDLC-01, 13.10.2026). Тип описан в README комплекта, если в
+# разделе «Условные обозначения» есть токен типа в обратных кавычках (`internal-contract`,
+# `type: task`) либо объявлен ID-префикс документов этого типа — префикс выводится из документов
+# комплекта, не из словаря (условие постановщика 19.11). Тип вне набора, не описанный, — отказ
+# гейта; описанный — исключение к согласованию (i); тип из набора, не описанный, — ⚠. В selfcheck —
+# ⚠ (вердикт не меняется).
+PLATFORM_TYPES = frozenset({
+    "vision", "glossary", "feature", "use-case", "business-rules", "process", "data-model",
+    "function", "screen-form", "control", "print-form", "contract-call", "notification", "rbac",
+    "platform-function", "external-integration"})
+
+
+def doc_types(files, readme_text: str) -> Dict[str, dict]:
+    """{тип: {n: документов, prefixes: ID-префиксы его документов, described: описан в README,
+    platform: в наборе платформы}} по файлам комплекта."""
+    section = _legend_section(readme_text or "") or ""
+    declared = _declared_prefixes(section)
+    out: Dict[str, dict] = {}
+    for f in files:
+        fm = read_frontmatter(f) or {}
+        t = str(fm.get("type", "") or "").strip().strip("'\"")
+        if not t:
+            continue
+        rec = out.setdefault(t, {"n": 0, "prefixes": set()})
+        rec["n"] += 1
+        i = str(fm.get("id", "") or "").strip().strip("'\"")
+        head = i.split("-")[0] if i else ""
+        if _PREFIX_RE.fullmatch(head):
+            rec["prefixes"].add(head)
+    for t, rec in out.items():
+        token = re.search(r"`(?:type:\s*)?" + re.escape(t) + r"`", section) is not None
+        rec["described"] = token or bool(rec["prefixes"] & declared)
+        rec["platform"] = t in PLATFORM_TYPES
+    return out
+
+
+def doc_types_lines(types: Dict[str, dict], readme: bool = True) -> List[Tuple[str, str]]:
+    """(знак гейта полного режима, текст) по TRF-04. readme=False — README комплекта нет: строка
+    о неописанных типах набора платформы не печатается (отсутствие README — свой блокер SDLC-08)."""
+    def fmt(items, prefixes=True):
+        return ", ".join(f"{t} ×{r['n']}" + (f" ({'/'.join(sorted(r['prefixes']))})"
+                                             if prefixes and r["prefixes"] else "")
+                         for t, r in sorted(items))
+    out: List[Tuple[str, str]] = []
+    bad = [(t, r) for t, r in types.items() if not r["platform"] and not r["described"]]
+    exc = [(t, r) for t, r in types.items() if not r["platform"] and r["described"]]
+    plat = [(t, r) for t, r in types.items()
+            if readme and r["platform"] and not r["described"]]
+    if bad:
+        out.append(("✗", "типы вне закрытого набора платформы не описаны в README комплекта: "
+                         + fmt(bad) + " — описать в таблице типов «Условных обозначений» (тип в "
+                         "обратных кавычках либо ID-префикс документов) и согласовать как "
+                         "исключение (SDLC-01)"))
+    if exc:
+        out.append(("i", "типы вне закрытого набора платформы: " + fmt(exc, prefixes=False)
+                         + " — объявлены в README комплекта; согласование исключений — по "
+                           "стандарту платформы (SDLC-01)"))
+    if plat:
+        out.append(("⚠", "типы из набора платформы не описаны в README комплекта: " + fmt(plat)
+                         + " — внешние читатели не узнают их префиксы (таблица типов «Условных "
+                           "обозначений»)"))
+    if types and not out:
+        out.append(("✓", "все типы комплекта в закрытом наборе платформы и описаны в README"))
+    return out
