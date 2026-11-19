@@ -26,9 +26,23 @@ _REGISTRY_HDR_RE = re.compile(r"^#+\s*(?:\d+\.\s*)?Реестр\s+ID",
                               re.I | re.M)
 
 
-def check_registry_duplicates(matrix_path: Path) -> Tuple[List[str], bool]:
+def _kit_doc_ids(root: Path) -> set:
+    """id из шапок документов комплекта (для ID иной формы в первой ячейке реестра)."""
+    out = set()
+    for p in _kit_md(root):
+        i = str((read_frontmatter(p) or {}).get("id", "") or "").strip().strip("'\"")
+        if i:
+            out.add(i)
+    return out
+
+
+def check_registry_duplicates(matrix_path: Path,
+                              doc_ids: Optional[set] = None) -> Tuple[List[str], bool]:
     """Дубли ID в секции «Реестр ID» матрицы — ✗ (реестровый ID
-    уникален; кейс: два CTL-000 у общего и подсервисного README)."""
+    уникален; кейс: два CTL-000 у общего и подсервисного README). ID иной
+    формы (страницы НФТ: `nfr`, `nfr-avl`) — когда ячейка целиком и точно
+    равна id из шапки документа комплекта (решение владельца канона
+    19.11.2026; правило matrix_sync._first_id)."""
     try:
         text = _fs.read_text(matrix_path, encoding="utf-8", errors="replace")
     except OSError:
@@ -36,6 +50,7 @@ def check_registry_duplicates(matrix_path: Path) -> Tuple[List[str], bool]:
     m = _REGISTRY_HDR_RE.search(text)
     if not m:
         return [], True
+    lazy_ids = doc_ids
     sect = text[m.end():]
     nxt = re.search(r"^#+\s", sect, re.M)
     if nxt:
@@ -45,10 +60,20 @@ def check_registry_duplicates(matrix_path: Path) -> Tuple[List[str], bool]:
     ok = True
     for ln in sect.splitlines():
         cells = table_cells(ln)
-        if len(cells) < 2 or not re.match(r"^[A-ZА-Я]{2,}[-\w]*\d$",
-                                          cells[0]):
+        if len(cells) < 2:
             continue
         rid = cells[0]
+        if not re.match(r"^[A-ZА-Я]{2,}[-\w]*\d$", rid):
+            bare = re.sub(r"\]\([^)]*\)", "]", rid).strip().strip("[]`* ")
+            # заглавная форма — прежнее правило (шапка «ID», нестандартные ID); иная форма —
+            # только точное совпадение с id документа
+            if not bare or bare[:1].isupper() or set(bare) <= set("-:"):
+                continue
+            if lazy_ids is None:
+                lazy_ids = _kit_doc_ids(matrix_path.parent)
+            if bare not in lazy_ids:
+                continue
+            rid = bare
         if rid in seen:
             ok = False
             report.append(f"✗ реестр ID: дубль {rid} в «Реестре ID» "

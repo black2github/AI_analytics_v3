@@ -49,7 +49,10 @@
   `feedback.md`, журналы координации — перечень `kitcheck/md.py`, тот же, что
   гейт переноса не переносит) документами комплекта не являются: их ID в
   реестр не выводятся, строка реестра с таким файлом — ⚠ «--write снимет», не
-  отказ (решение владельца канона 19.11.2026);
+  отказ (решение владельца канона 19.11.2026); ID документа иной формы
+  (страницы НФТ: `nfr`, `nfr-avl` — id равен имени файла) в первой ячейке
+  реестра узнаётся, когда ячейка целиком и точно, с учётом регистра, равна id
+  из шапки документа комплекта (решение владельца канона 19.11.2026);
 - покрытие: связь — markdown-ссылка в любую сторону; ID связи — ID из текста
   ссылки, если он определён в целевом файле, иначе ID заголовка по якорю,
   иначе ID файла; голая ссылка на документ-контейнер (справочник, документ
@@ -583,7 +586,7 @@ class Kit:
 
 # ---------------------------------------------------------------- проверка
 
-def _first_id(cell: str) -> str:
+def _first_id(cell: str, doc_ids: Optional[Set[str]] = None) -> str:
     c = re.sub(r"\]\([^)]*\)", "]", cell)
     m = ANY_ID_RE.search(c)
     if m:
@@ -591,8 +594,14 @@ def _first_id(cell: str) -> str:
     # ID документа нестандартной формы (`API-ASYNC-SEQ`, `EXTINT-005-A`) — только
     # когда ячейка целиком и есть ID: пересборка пишет такие строки из шапок, и
     # сверка должна их узнавать, иначе --check после --write не сходится
-    m = FULL_CELL_ID_RE.fullmatch(c.strip().strip("[]`* "))
-    return m.group(0) if m else ""
+    bare = c.strip().strip("[]`* ")
+    m = FULL_CELL_ID_RE.fullmatch(bare)
+    if m:
+        return m.group(0)
+    # id из шапки документа комплекта в иной форме (страницы НФТ: `nfr`, `nfr-avl` —
+    # шаблон nfr.md: id равен имени файла) — ячейка целиком и точно, без приведения
+    # регистра (решение владельца канона 19.11.2026)
+    return bare if doc_ids and bare in doc_ids else ""
 
 
 def _file_cell(cell: str) -> str:
@@ -624,7 +633,7 @@ def registry_findings(sec: Section, kit: Kit) -> List[Tuple[str, List[str]]]:
     fcol = sec.col(r"файл", len(sec.header) - 1 if sec.header else 2)
     have: Dict[str, List[str]] = {}
     for r in sec.rows:
-        i = _first_id(r[0]) if r else ""
+        i = _first_id(r[0], set(kit.fm)) if r else ""
         if i:
             have.setdefault(i, r)
     derived = kit.derived_registry()
@@ -880,12 +889,13 @@ def _norm_title(x: str) -> str:
     return re.sub(r"\s+", " ", x.replace("\\|", "|")).strip().lower().replace("ё", "е")
 
 
-def _old_rows(sec: Section, lines: List[str]) -> Dict[str, List[str]]:
+def _old_rows(sec: Section, lines: List[str],
+              doc_ids: Optional[Set[str]] = None) -> Dict[str, List[str]]:
     t0, t1 = sec.tables[0]
     out: Dict[str, List[str]] = {}
     for ln in lines[t0 + 2:t1]:
         cells = _split_row(ln)
-        i = _first_id(cells[0]) if cells else ""
+        i = _first_id(cells[0], doc_ids) if cells else ""
         if i:
             out.setdefault(i, cells)
     return out
@@ -896,9 +906,10 @@ def build_registry(sec: Section, lines: List[str], kit: Kit) -> List[str]:
     manual: Dict[str, str] = {}
     old_name: Dict[str, str] = {}
     t0, t1 = sec.tables[0]
+    doc_ids = set(kit.fm)
     for ln in lines[t0 + 2:t1]:
         cells = _split_row(ln)
-        i = _first_id(cells[0]) if cells else ""
+        i = _first_id(cells[0], doc_ids) if cells else ""
         if i and len(cells) > 1:
             old_name[i] = cells[1]
         if i and i not in derived and _file_cell(cells[-1]) in ("—", "-", ""):
@@ -907,7 +918,7 @@ def build_registry(sec: Section, lines: List[str], kit: Kit) -> List[str]:
     # название совпадает без учёта тега, файл тот же (якорь допустим).
     # Название ID из строки таблицы выводится ненадёжно (вторая ячейка бывает
     # контуром «BE» или текстом со ссылками) — сохраняется название из реестра.
-    old = _old_rows(sec, lines)
+    old = _old_rows(sec, lines, doc_ids)
     cells: Dict[str, List[str]] = {}
     kept_by_tag: Set[str] = set()
     for i, (rel, name) in derived.items():

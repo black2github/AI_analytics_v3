@@ -22,7 +22,11 @@
 #      `open-questions.md`, `feedback.md`, `coordination-*.md`,
 #      `*.filled.md`, `*.tables.md`, каталоги `prompts/`, `sandbox/`,
 #      `sources/`, `confluence/`, `__pycache__`. Служебные файлы живут в
-#      src-репозитории и остаются там.
+#      src-репозитории и остаются там. Каталог НФТ `nfr/`, лежащий рядом с
+#      `docs/` (раскладка канона output/<service>/nfr), ложится в корень
+#      сборки как `nfr/` — раздел целевого корня; сторож каталога НФТ видит
+#      его на сборке, `--out` переносит (строка i с числом страниц). В режиме
+#      репозитория документации каталог уже в корне — сборка прежняя.
 #   2. Прогоняет на собранном комплекте прибор миграции `selfcheck.py`
 #      С ИСТОЧНИКАМИ src-репозитория (каталог выгрузки находится сам:
 #      `sources/confluence` или `confluence`) — тот же гейт, что гоняет
@@ -536,6 +540,25 @@ def stage_kit(docs: Path, target: Path) -> Tuple[int, List[str]]:
         shutil.copy2(p, dst)
         copied += 1
     return copied, skipped
+
+
+def stage_nfr(docs: Path, target: Path) -> Optional[Tuple[str, int]]:
+    """Каталог НФТ рядом с docs/ (раскладка канона output/<service>/nfr) — в корень сборки как
+    nfr/. (вид, страниц): «перенесён» — скопирован; «два каталога» — nfr/ есть и внутри docs/,
+    не копируется. Каталога рядом с docs/ нет — None."""
+    sib = docs.parent / "nfr"
+    if not sib.is_dir():
+        return None
+    pages = sorted(p for p in sib.rglob("*") if p.is_file()
+                   and not any(x.startswith(".") for x in p.relative_to(sib).parts))
+    n = sum(1 for p in pages if p.suffix.lower() == ".md")
+    if (docs / "nfr").is_dir():
+        return "два каталога", n
+    for p in pages:
+        dst = target / "nfr" / p.relative_to(sib)
+        dst.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(p, dst)
+    return "перенесён", n
 
 
 # --- шаг 4: условия переноса --------------------------------------------------
@@ -1697,8 +1720,15 @@ def kit_dirty(docs: Path) -> Optional[List[str]]:
     return out
 
 
-def check_kit_version(gate: Gate, docs: Path, out: Optional[Path]) -> None:
+def check_kit_version(gate: Gate, docs: Path, out: Optional[Path],
+                      nfr_dir: Optional[Path] = None) -> None:
+    """CORE-05: всё, что гейт кладёт в сборку, — каталог комплекта и каталог НФТ рядом с ним
+    (nfr_dir, когда гейт перенёс его в сборку), — из версии, которую можно получить повторно.
+    Пути каталога НФТ в строке — «../nfr/…» (относительно каталога комплекта)."""
     dirty = kit_dirty(docs)
+    if dirty is not None and nfr_dir is not None:
+        nd = kit_dirty(nfr_dir)
+        dirty = None if nd is None else dirty + [f"../nfr/{p}" for p in nd]
     if dirty is None:
         if out is not None:
             gate.add("✗", "CORE-05", "каталог комплекта не под git — версию комплекта нельзя "
@@ -1709,16 +1739,19 @@ def check_kit_version(gate: Gate, docs: Path, out: Optional[Path]) -> None:
         return
     if dirty:
         what = f"{len(dirty)} ({', '.join(dirty[:5])}{'…' if len(dirty) > 5 else ''})"
+        where = ("в каталоге комплекта и каталоге НФТ рядом с ним" if nfr_dir is not None
+                 else "в каталоге комплекта")
         if out is not None:
             gate.add("✗", "CORE-05", f"перенос из рабочего дерева: версию комплекта нельзя получить "
-                     f"повторно — незакоммиченных изменений в каталоге комплекта {what}; "
+                     f"повторно — незакоммиченных изменений {where} {what}; "
                      "закоммитить и повторить", check="версия комплекта")
         else:
-            gate.add("⚠", "CORE-05", f"незакоммиченные изменения в каталоге комплекта: {what} — "
+            gate.add("⚠", "CORE-05", f"незакоммиченные изменения {where}: {what} — "
                      "проверено рабочее дерево, не коммит; перенос (--out) — только из коммита",
                      check="версия комплекта")
         return
-    gate.add("✓", "CORE-05", "каталог комплекта без незакоммиченных изменений",
+    gate.add("✓", "CORE-05", "каталог комплекта без незакоммиченных изменений"
+             + (" (и каталог НФТ ../nfr/ рядом с ним)" if nfr_dir is not None else ""),
              check="версия комплекта")
 
 
@@ -1801,6 +1834,7 @@ def run_gate(src_root: Path, docs_name: str = "docs", out: Optional[Path] = None
         staged = Path(tmp)
     try:
         copied, skipped = stage_kit(docs, staged)
+        nfr_staged: Optional[Path] = None   # каталог НФТ рядом с docs/, перенесённый в сборку
         if docs_repo:
             gate.add("i", "РЕЖИМ", "репозиторий документации: комплект проверяется на месте "
                      "(в корне --src); условия переноса читаются как соответствие действующей "
@@ -1822,6 +1856,15 @@ def run_gate(src_root: Path, docs_name: str = "docs", out: Optional[Path] = None
                      + (f" ({', '.join(skipped[:4])}{'…' if len(skipped) > 4 else ''})" if skipped
                         else " (в docs/ их не было)"),
                      check="служебные файлы миграции")
+            if not after_step:
+                nfr_st = stage_nfr(docs, staged)
+                if nfr_st and nfr_st[0] == "два каталога":
+                    gate.add("✗", "TRF-01", "два каталога НФТ: docs/nfr/ и nfr/ рядом с docs/ — "
+                             "какой действует, гейт не решает; оставить один", check="каталог НФТ")
+                elif nfr_st:
+                    nfr_staged = docs.parent / "nfr"
+                    gate.add("i", "TRF-01", f"каталог НФТ: {nfr_st[1]} страниц — в сборке, раздел "
+                             "nfr/ целевого корня", check="каталог НФТ")
         if sources is None:
             sources = find_sources(src_root)
         # второй комплект исходного репозитория (строка «комплект <путь>» профиля источников):
@@ -1863,7 +1906,7 @@ def run_gate(src_root: Path, docs_name: str = "docs", out: Optional[Path] = None
             gate.downgrade(_AFTER_STEP_DOWNGRADE, _AFTER_STEP_NOTE)
         own = check_own_debts(gate, staged, docs, after_step, own_debts, kit_files)
         check_target_repo(gate, docs if docs_repo else out, in_place=docs_repo)
-        check_kit_version(gate, docs, out)
+        check_kit_version(gate, docs, out, nfr_staged)
         if no_validator:
             gate.add("⚠", "ВАЛИДАТОР", "валидатор платформы отключён ключом "
                      "--no-validator — структурная половина гейта не выполнена")

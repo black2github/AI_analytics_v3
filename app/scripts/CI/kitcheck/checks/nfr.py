@@ -70,12 +70,27 @@ def _nfr_repo_root(docs: Path) -> Path:
     return docs.parent
 
 
-def check_nfr_catalog(docs: Path) -> Tuple[List[str], bool]:
-    """Сторож output/<service>/nfr рядом с docs/.
+def nfr_catalog_dirs(docs: Path) -> List[Path]:
+    """Каталоги НФТ комплекта, найденные в двух позициях (признак — положение относительно
+    корня комплекта): `<корень комплекта>/nfr` (целевая раскладка, репозиторий документации) и
+    `<родитель корня комплекта>/nfr` (рабочая раскладка канона output/<service>/nfr рядом с
+    docs/)."""
+    out: List[Path] = []
+    for d in (docs / "nfr", docs.parent / "nfr"):
+        if d.is_dir() and all(d.resolve() != x.resolve() for x in out):
+            out.append(d)
+    return out
 
-    Каталога нет — молчит: утилита не знает, был ли вход. Если каталог
-    есть — обязательны README и все 18 nfr-<код>.md, без колонок
-    «Не задано»/«Основание». Значение nfr в _KNOWN_TYPES пути srs/<тип>/
+
+def check_nfr_catalog(docs: Path) -> Tuple[List[str], bool]:
+    """Сторож каталога НФТ: <корень комплекта>/nfr либо <родитель корня>/nfr
+    (output/<service>/nfr рядом с docs/).
+
+    Каталога нет — молчит: утилита не знает, был ли вход. Найдены оба — ✗:
+    какой действует, прибор не решает. Найден один — первая строка отчёта
+    называет его путь; обязательны README и все 18 nfr-<код>.md с таблицей
+    | ID | Параметр | Допустимое значение | Пояснение |, без запрещённых
+    колонок и списка политик. Значение nfr в _KNOWN_TYPES пути srs/<тип>/
     не добавляется.
     """
     report: List[str] = []
@@ -92,13 +107,21 @@ def check_nfr_catalog(docs: Path) -> Tuple[List[str], bool]:
                 report.append(
                     f"✗ {p.relative_to(docs)}: раздел «Нефункциональные "
                     "требования» внутри фичи; страницы НФТ — в ../nfr/")
-    nfr_dir = docs.parent / "nfr"
-    if not nfr_dir.is_dir():
+    found = nfr_catalog_dirs(docs)
+    if not found:
         return report, ok
+    if len(found) > 1:
+        report.insert(0, "✗ два каталога НФТ: nfr/ в корне комплекта и ../nfr/ рядом с ним — "
+                         "какой действует, прибор не решает; оставить один")
+        return report, False
+    nfr_dir = found[0]
+    base = nfr_dir.parent
+    report.insert(0, "i каталог НФТ: " + ("nfr/ в корне комплекта" if base == docs
+                                          else "../nfr/ рядом с корнем комплекта"))
     for d in sorted(p for p in nfr_dir.rglob("*") if p.is_dir()):
         ok = False
         report.append(
-            f"✗ {d.relative_to(docs.parent)}: вложенный каталог в nfr/")
+            f"✗ {d.relative_to(base)}: вложенный каталог в nfr/")
     seen_codes: Dict[str, Path] = {}
     page_rows: set = set()
     repo = _nfr_repo_root(docs)
@@ -106,9 +129,9 @@ def check_nfr_catalog(docs: Path) -> Tuple[List[str], bool]:
     if not has_readme:
         ok = False
         report.append(
-            f"✗ {nfr_dir.relative_to(docs.parent)}: нет README.md реестра")
+            f"✗ {nfr_dir.relative_to(base)}: нет README.md реестра")
     for p in sorted(nfr_dir.glob("*.md")):
-        rel = p.relative_to(docs.parent)
+        rel = p.relative_to(base)
         fm = read_frontmatter(p)
         if not fm:
             ok = False
@@ -265,5 +288,5 @@ def check_nfr_catalog(docs: Path) -> Tuple[List[str], bool]:
             ok = False
             report.append(f"✗ BRD-6.2: строка {extra} без страницы типа")
     if ok:
-        report.append(f"✓ {nfr_dir.relative_to(docs.parent)}: каталог НФТ")
+        report.append(f"✓ {nfr_dir.relative_to(base)}: каталог НФТ")
     return report, ok

@@ -469,3 +469,60 @@ def test_service_file_list_has_one_home():
     assert tg._SKIP_NAMES is tg.MIGRATION_SERVICE_NAMES
     assert tg._SKIP_SUFFIXES is tg.MIGRATION_SERVICE_SUFFIXES
     assert "open-questions.md" in tg._SKIP_NAMES
+
+
+# ---------------------- ID иной формы в «Реестре ID»: страницы НФТ (решение 19.11.2026)
+
+_NFR_ROWS = ("| nfr | Реестр НФТ | `nfr/README.md` |\n"
+             "| nfr-avl | Доступность | `nfr/nfr-avl.md` |\n")
+
+
+def _nfr_kit(tmp_path: Path, rows: str = "") -> Path:
+    docs = kit(tmp_path, registry=REGISTRY + rows)
+    w(docs / "nfr/README.md", "---\nid: nfr\ntype: nfr\ntitle: 'Реестр НФТ'\n---\n\n# Реестр НФТ\n")
+    w(docs / "nfr/nfr-avl.md", "---\nid: nfr-avl\ntype: nfr\ntitle: 'Доступность'\n---\n\n# Доступность\n")
+    return docs
+
+
+def test_nfr_page_ids_recognized_in_registry(tmp_path):
+    report, warn = ms.check(_nfr_kit(tmp_path, _NFR_ROWS))
+    assert not warn, report
+
+
+def test_nfr_rows_written_then_check_converges(tmp_path):
+    docs = _nfr_kit(tmp_path)
+    report, warn = ms.check(docs)
+    assert warn and "нет строки для ID из документов ×2: nfr; nfr-avl" in "\n".join(report), report
+    report, code = ms.write(docs)
+    assert code == 0, report
+    reg = _section((docs / "traceability-matrix.md").read_text(encoding="utf-8"), "Реестр ID")
+    assert "| nfr-avl | Доступность | `nfr/nfr-avl.md` |" in reg, reg
+    report, warn = ms.check(docs)
+    assert not warn, report
+    before = (docs / "traceability-matrix.md").read_bytes()
+    ms.write(docs)
+    assert (docs / "traceability-matrix.md").read_bytes() == before
+
+
+def test_lowercase_word_not_doc_id_is_not_registry_id(tmp_path):
+    # несрабатывание: слово в нижнем регистре, не равное id документа, идентификатором не становится
+    docs = _nfr_kit(tmp_path, _NFR_ROWS + "| прочее | Заметка | `srs/x.md` |\n")
+    report, warn = ms.check(docs)
+    assert not warn and "прочее" not in "\n".join(report), report
+
+
+def test_other_case_row_is_discrepancy(tmp_path):
+    # сравнение точное: «NFR-AVL» при документе «nfr-avl» — расхождение, не совпадение
+    rows = "| nfr | Реестр НФТ | `nfr/README.md` |\n| NFR-AVL | Доступность | `nfr/nfr-avl.md` |\n"
+    report, warn = ms.check(_nfr_kit(tmp_path, rows))
+    text = "\n".join(report)
+    assert warn and "нет строки для ID из документов ×1: nfr-avl" in text, text
+    assert "NFR-AVL" in text, text
+
+
+def test_registry_duplicates_see_doc_ids_of_other_form(tmp_path):
+    from app.scripts.CI.kitcheck.checks.matrix import check_registry_duplicates
+    docs = _nfr_kit(tmp_path, _NFR_ROWS + "| nfr-avl | Доступность (дубль) | `nfr/nfr-avl.md` |\n"
+                                          "| прочее | А | — |\n| прочее | Б | — |\n")
+    rep, ok = check_registry_duplicates(docs / "traceability-matrix.md")
+    assert not ok and len(rep) == 1 and "дубль nfr-avl" in rep[0], rep
