@@ -24,26 +24,37 @@ def matrix(tmp_path: Path, rows, bom: bool = False, eol: str = "\r\n") -> Path:
     return p
 
 
-def test_close_appends_suffix_and_keeps_other_bytes(tmp_path):
+def test_close_deletes_row_and_keeps_other_bytes(tmp_path):
+    # норма 2026-11-20: закрытый долг снимается из матрицы — строка удаляется; вывод несёт
+    # удалённую строку целиком, дату и основание (текст для сообщения коммита)
     p = matrix(tmp_path, [ROW_A, ROW_B], bom=True)
     before = p.read_bytes()
     rep, ok = close_debt(p, "CTL-417", "src/TEAMTB-1", targets=["CTL-417"], day="2026-11-09")
     assert ok, rep
     after = p.read_bytes()
     assert after.startswith(b"\xef\xbb\xbf")
-    new_row = ROW_B[:-2] + "; закрыт: 2026-11-09, src/TEAMTB-1, затронуто: CTL-417 |"
-    assert after == before.replace(ROW_B.encode("utf-8"), new_row.encode("utf-8"))
-    assert after.count(b"\r\n") == before.count(b"\r\n")
-    assert issue_closed(new_row) == "2026-11-09, src/TEAMTB-1, затронуто: CTL-417"
+    assert after == before.replace(ROW_B.encode("utf-8") + b"\r\n", b"")
+    assert after.count(b"\r\n") == before.count(b"\r\n") - 1
+    assert "удалена" in rep[0] and "2026-11-09, src/TEAMTB-1, затронуто: CTL-417" in rep[0], rep
+    assert rep[1].endswith(ROW_B), rep
 
 
-def test_close_is_idempotent(tmp_path):
+def test_close_second_run_finds_nothing(tmp_path):
     p = matrix(tmp_path, [ROW_A])
     close_debt(p, "FUN-SYS-38", "abc1234", day="2026-11-09")
     once = p.read_bytes()
     rep, ok = close_debt(p, "FUN-SYS-38", "abc1234", day="2026-11-10")
-    assert ok and "уже закрыт" in rep[0]
+    assert not ok and "нет" in rep[0], rep
     assert p.read_bytes() == once
+
+
+def test_close_deletes_row_closed_by_old_suffix(tmp_path):
+    # строка прежней формы (приписка «закрыт:») ключом тоже снимается
+    old = ROW_A[:-2] + "; закрыт: 2026-11-05, abc1234 |"
+    p = matrix(tmp_path, [old, ROW_B])
+    rep, ok = close_debt(p, "FUN-SYS-37", "abc1234", day="2026-11-20")
+    assert ok and "приписк" in rep[0], rep
+    assert old not in p.read_text(encoding="utf-8") and ROW_B in p.read_text(encoding="utf-8")
 
 
 def test_statement_verbatim_checked(tmp_path):
@@ -71,18 +82,22 @@ def test_statement_with_nested_quotes(tmp_path):
 def test_several_candidates_refused(tmp_path):
     row2 = ROW_B.replace("CTL-417", "FUN-SYS-37")
     p = matrix(tmp_path, [ROW_A, row2])
+    before = p.read_bytes()
     rep, ok = close_debt(p, "FUN-SYS-37", "abc")
+    # НЕсрабатывание: несколько строк без уточнения — ничего не удаляется, кандидаты в выводе
     assert not ok and "несколько (2)" in rep[0], rep
+    assert p.read_bytes() == before
     rep, ok = close_debt(p, "FUN-SYS-37", "abc", line_no=8, day="2026-11-09")
     assert ok, rep
-    assert "закрыт: 2026-11-09" in p.read_text(encoding="utf-8").splitlines()[7]
+    text = p.read_text(encoding="utf-8")
+    assert row2 not in text and ROW_A in text
 
 
-def test_form1_debt_not_closed_by_append(tmp_path):
+def test_form1_debt_not_closed_by_key(tmp_path):
     p = matrix(tmp_path, [ROW_F1])
     before = p.read_bytes()
     rep, ok = close_debt(p, "FUN-SYS-39", "abc")
-    assert not ok and "ID цели во второй колонке" in rep[0], rep
+    assert not ok and "заход-создатель цели" in rep[0], rep
     assert p.read_bytes() == before
 
 
@@ -107,7 +122,8 @@ def test_cli_close(tmp_path):
                         "--close", "FUN-SYS-37", "--by", "src/X-1", "--date", "2026-11-09"],
                        capture_output=True, text=True, encoding="utf-8")
     assert r.returncode == 0, r.stdout + r.stderr
-    assert "закрыт: 2026-11-09, src/X-1" in p.read_text(encoding="utf-8")
+    assert "FUN-SYS-37" not in p.read_text(encoding="utf-8")
+    assert "закрыт 2026-11-09, src/X-1" in r.stdout and ROW_A in r.stdout, r.stdout
     r = subprocess.run([sys.executable, str(script), "--matrix", str(p), "--docs", str(tmp_path),
                         "--close", "CTL-999", "--by", "x"], capture_output=True, text=True,
                        encoding="utf-8")

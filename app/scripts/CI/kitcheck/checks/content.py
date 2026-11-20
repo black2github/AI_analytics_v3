@@ -141,7 +141,11 @@ def _debt_rows(lines: List[str]) -> set:
         import link_debts as _ld
     except ImportError:  # импорт пакетом app.scripts.CI (тесты)
         from ... import link_debts as _ld  # type: ignore
-    raws = {raw for *_x, raw in _ld.parse_matrix("\n".join(lines))[1]}
+    text = "\n".join(lines)
+    raws = {raw for *_x, raw in _ld.parse_matrix(text)[1]}
+    # закрытый долг без цели прежней формы (приписка «закрыт:») из разбора долгов вышел
+    # (2026-11-20), но остаётся формальной записью до чистки — как прежде, не читается
+    raws |= {c["raw"] for c in _ld.closed_debt_rows(text) if c["form"] == "приписка"}
     out, in_debts = set(), False
     for n, ln in enumerate(lines, 1):
         if ln.startswith("#"):

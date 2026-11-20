@@ -39,12 +39,19 @@
 # видом нельзя спрятать исполнимый долг — слаг из причины сверяется с
 # подсервисами migration-plan.md комплекта (только ⚠).
 #
-# Закрытие долга без цели (норма закрытия OQ, решение владельца 2026-11-03):
-# строка не удаляется, в конец дописывается «; закрыт: <ГГГГ-ММ-ДД>, <коммит или
-# тег>» (или «…, без изменений»). Закрытый долг в счёт открытых не входит —
-# отдельная строка i. Долг вида «открытый вопрос» сверяется с записью журнала
-# open-questions.md (адрес — find_kit_file): долг открыт, а запись закрыта по
-# норме, или наоборот — ⚠. Записи, закрытые до нормы в прежних формах, не
+# Закрытие долга (решение владельца 2026-11-20): в разделе долгов стоят только
+# открытые долги; закрытый долг снимается из матрицы — строка удаляется (ключ
+# --close для долга без цели). След закрытия — коммит и, если у долга был
+# источник OQ-NNN, запись журнала (закрывается по своей норме). Прежние формы
+# закрытой строки — ID цели во второй колонке и приписка «; закрыт: <дата>, …» —
+# распознаются, в счёт открытых и в разбор долгов не входят (ни здесь, ни у гейта
+# и других потребителей разбора) и печатаются предупреждением «к удалению: N»;
+# снимает их режим --prune-closed (без --write — перечень). Строку формы «цель
+# во второй колонке», чья цель — голый ID вне реестра матрицы, чистка не трогает:
+# закрытие не подтверждено, перечень — отдельно. Долг вида «открытый вопрос»
+# сверяется с записью журнала open-questions.md (адрес — find_kit_file): долг
+# открыт, а запись закрыта по норме — ⚠; закрытая строка, пока не снята, —
+# ⚠ при открытой записи. Записи, закрытые до нормы в прежних формах, не
 # сверяются; журнала нет (docs-репозиторий) — строка i.
 #
 # Стадии запуска (одна утилита, три рубежа): самопроверка агента в заходе →
@@ -109,16 +116,26 @@ _ISSUE_FIELD_RES = {
 }
 ISSUE_REQUIRED = {"responsible": "ответственный", "constraint": "ограничение",
                   "closure": "закрытие"}
-# приписка закрытия долга без цели: «; закрыт: <дата>, <коммит/тег>» — «закрыт» с
-# двоеточием сразу после слова, поле «закрытие:» под неё не подходит
+# приписка закрытия долга без цели (прежняя форма, до 2026-11-20): «; закрыт: <дата>,
+# <коммит/тег>» — «закрыт» с двоеточием сразу после слова, поле «закрытие:» под неё не
+# подходит; внутри «…» (формулировка, цитата) приписка не ищется
 _ISSUE_CLOSED_RE = re.compile(
     r"(?:^|[;|])\s*закрыт:\s*(\d{4}-\d{2}-\d{2}|\d{2}\.\d{2}\.\d{4})([^;|]*)", re.IGNORECASE)
+_GUILLEMET_SPAN_RE = re.compile(r"«[^«»]*»")
+
+
+def _blank_guillemets(s: str) -> str:
+    """Текст в «…» (с вложенными) заменён пробелами той же длины."""
+    prev = None
+    while prev != s:
+        prev, s = s, _GUILLEMET_SPAN_RE.sub(lambda m: " " * len(m.group(0)), s)
+    return s
 
 
 def issue_closed(row: str) -> Optional[str]:
     """Приписка закрытия долга без цели («закрыт: <дата>, …») или None — долг открыт."""
-    m = _ISSUE_CLOSED_RE.search(row)
-    return (m.group(1) + m.group(2)).strip().rstrip(",") if m else None
+    m = _ISSUE_CLOSED_RE.search(_blank_guillemets(row))
+    return (row[m.start(1):m.end(2)]).strip().rstrip(",") if m else None
 
 # Третий формат — пробел НФТ (шаблон nfr.md, скилл create-nfr): это не
 # отсутствующий артефакт, а ячейка/пункт с «не выявлено» / «требует
@@ -299,11 +316,11 @@ def debt_section_from_ids(matrix_text: str) -> set:
     return out
 
 
-def _debt_section_rows(matrix_text: str) -> List[List[str]]:
-    """Ячейки строк раздела долгов (без шапки и разделителя), в порядке матрицы."""
-    rows: List[List[str]] = []
+def _debt_section_lines(matrix_text: str) -> List[Tuple[int, str, List[str]]]:
+    """(номер строки с 1, строка, ячейки) строк раздела долгов без шапки и разделителя."""
+    rows: List[Tuple[int, str, List[str]]] = []
     in_debts = header_seen = False
-    for ln in matrix_text.splitlines():
+    for n, ln in enumerate(matrix_text.splitlines(), 1):
         if ln.startswith("#"):
             in_debts = bool(_DEBTS_HEADING_RE.search(ln))
             header_seen = False
@@ -317,8 +334,48 @@ def _debt_section_rows(matrix_text: str) -> List[List[str]]:
         if not header_seen:
             header_seen = True
             continue
-        rows.append(cells)
+        rows.append((n, ln, cells))
     return rows
+
+
+def _debt_section_rows(matrix_text: str) -> List[List[str]]:
+    """Ячейки строк раздела долгов (без шапки и разделителя), в порядке матрицы."""
+    return [cells for _n, _ln, cells in _debt_section_lines(matrix_text)]
+
+
+_LINK_TOKEN_RE = re.compile(r"^\[[^\]]+\]\([^)\s]+\)$")
+
+
+def closed_debt_rows(matrix_text: str,
+                     registry: Optional[Dict[str, Tuple[str, str]]] = None) -> List[dict]:
+    """Закрытые строки раздела долгов (прежние формы закрытия, до 2026-11-20): {line, form,
+    raw, prunable, why}. form — «приписка» (долг без цели с «; закрыт: <дата>, …») или «цель»
+    (ID цели во второй колонке, либо «—» и только ссылки в третьей). prunable — закрытие
+    однозначно, режим чистки строку снимает: приписка; ссылка на цель; голый ID цели, который
+    стоит в реестре матрицы. Голый ID вне реестра — закрытие не подтверждено (снятая карточка,
+    опечатка, номер не того пространства), строку чистка не трогает; why — причина."""
+    if registry is None:
+        registry = parse_matrix_full(matrix_text)[0]
+    out: List[dict] = []
+    for n, ln, cells in _debt_section_lines(matrix_text):
+        if issue_closed(" ".join(cells)) and issue_fields(" ".join(cells)):
+            out.append({"line": n, "form": "приписка", "raw": ln.strip(), "prunable": True,
+                        "why": ""})
+            continue
+        if not _closed_debt(cells):
+            continue
+        missing: List[str] = []
+        if cells[1] != "—":
+            for tok in (t.strip() for t in cells[1].split(",") if t.strip()):
+                if _LINK_TOKEN_RE.match(tok):
+                    continue
+                base = tok.split("..", 1)[0]
+                if base not in registry:
+                    missing.append(tok)
+        out.append({"line": n, "form": "цель", "raw": ln.strip(), "prunable": not missing,
+                    "why": (f"цели {', '.join(missing)} нет в реестре матрицы — закрытие не "
+                            "подтверждено") if missing else ""})
+    return out
 
 
 def awaiters_without_debt(matrix_text: str, docs_root: Path,
@@ -630,6 +687,11 @@ def parse_matrix_full(matrix_text: str):
             # больше нет — строка не сторожится и не считается нераспознанной
             if _closed_debt(cells):
                 continue
+            # закрытый долг без цели (приписка «; закрыт: <дата>, …», прежняя форма): в
+            # разбор долгов не входит — ни в счёт открытых, ни у гейта и других потребителей;
+            # строку видит closed_debt_rows (к удалению)
+            if issue_closed(joined) and issue_fields(joined):
+                continue
         issue = issue_fields(joined)
         if issue:
             # долг без цели: тип — «долг:<вид>», имя — формулировка,
@@ -707,10 +769,11 @@ def _oq_close_mismatch(who: str, src: str, closed: Optional[str],
     if closed is None and d is not None:
         ref = oq_close_ref(st) or "без коммита и тега"
         return [f"⚠ долг {who} по {src} открыт, а запись закрыта {d.isoformat()} ({ref}) — "
-                "допишите закрытие долга или снимите статус"]
+                "снимите строку долга (--close) или статус записи"]
     if closed is not None and (not st or oq_status_class(st) in ("открыт", "частично")):
-        return [f"⚠ долг {who} по {src} закрыт ({closed}), а запись журнала открыта "
-                f"(«{st[:60]}») — закройте запись по норме или снимите приписку долга"]
+        return [f"⚠ долг {who} по {src} закрыт припиской ({closed}), а запись журнала открыта "
+                f"(«{st[:60]}») — закройте запись по норме или верните долг в открытые; после "
+                "снятия строки открытую запись без долга покажет гейт переноса (CORE-20)"]
     return []
 
 
@@ -766,24 +829,34 @@ def check(matrix_path: Path, docs_root: Path,
     oq_file = find_kit_file(docs_root, "open-questions.md")
     oq_status = (oq_statuses(_fs.read_text(oq_file, encoding="utf-8", errors="replace"))
                  if oq_file is not None else None)
-    n_issue_closed = 0
     n_oq_sourced = 0
     close_warn: List[str] = []
+    # закрытые строки прежних форм (раздел ещё не чищен): в разбор долгов не входят; долг
+    # «открытый вопрос» с припиской сверяется с журналом, пока строка не снята
+    closed_rows = closed_debt_rows(_fs.read_text(matrix_path, encoding="utf-8",
+                                                 errors="replace"), registry)
+    for cr in closed_rows:
+        if cr["form"] != "приписка":
+            continue
+        cf = issue_fields(cr["raw"]) or {}
+        src = cf.get("source") or ""
+        if cf.get("kind") == "открытый вопрос" and src.upper().startswith("OQ-"):
+            n_oq_sourced += 1
+            if oq_status is not None:
+                cells = [c.strip() for c in split_cells(_ROW_RE.match(cr["raw"]).group(1))]
+                close_warn.extend(_oq_close_mismatch(", ".join(_expand_from(cells[0])), src,
+                                                     issue_closed(cr["raw"]), oq_status))
     for from_ids, typ, name, owner, raw in debts:
         if typ.startswith("долг:"):
             # долг без цели: полнота полей и FROM-ID в реестре; просрочка
             # и исполнимость не применяются — цели нет
             fields = issue_fields(raw) or {"missing": []}
-            closed = issue_closed(raw)
-            if closed:
-                n_issue_closed += 1
-            else:
-                n_issue += 1
+            n_issue += 1
             src = fields.get("source") or ""
             if fields.get("kind") == "открытый вопрос" and src.upper().startswith("OQ-"):
                 n_oq_sourced += 1
                 if oq_status is not None:
-                    close_warn.extend(_oq_close_mismatch(", ".join(from_ids), src, closed,
+                    close_warn.extend(_oq_close_mismatch(", ".join(from_ids), src, None,
                                                          oq_status))
             if fields["missing"]:
                 report.append(f"долг без цели НЕПОЛОН: нет полей "
@@ -908,8 +981,18 @@ def check(matrix_path: Path, docs_root: Path,
                       "вопросы, противоречия, правила на изображении, "
                       "недоступные источники, вне плана) — сторожится полнота полей"
                       + (f"; из них «вне плана» {n_out_of_plan}" if n_out_of_plan else ""))
-    if n_issue_closed:
-        report.append(f"i закрытых долгов без цели: {n_issue_closed}")
+    prune = [c for c in closed_rows if c["prunable"]]
+    if prune:
+        n_t = sum(1 for c in prune if c["form"] == "цель")
+        report.append(f"⚠ закрытых строк долга к удалению: {len(prune)} (ID цели во второй колонке "
+                      f"— {n_t}, приписка «закрыт:» — {len(prune) - n_t}) — закрытый долг снимается "
+                      "из матрицы; снять: link_debts.py --matrix … --docs … --prune-closed --write")
+    kept = [c for c in closed_rows if not c["prunable"]]
+    if kept:
+        report.append(f"⚠ закрытых по форме строк долга без подтверждённой цели: {len(kept)} — "
+                      "чистка их не трогает, проверить вручную (снять или вернуть в открытые): "
+                      + "; ".join(f"строка {c['line']}: {c['why']}" for c in kept[:6])
+                      + (f"; … и ещё {len(kept) - 6}" if len(kept) > 6 else ""))
     report.extend(close_warn)
     if n_oq_sourced and oq_status is None:
         report.append("i журнал open-questions.md не найден — закрытие долгов «открытый вопрос» "
@@ -959,7 +1042,7 @@ def check(matrix_path: Path, docs_root: Path,
             "просрочка не проверяется, дозакрытие при появлении "
             "комплекта владельца ✓")
     if ok:
-        report.append(f"OK: долгов {len(debts) - n_issue_closed}, просроченных нет, "
+        report.append(f"OK: долгов {len(debts)}, просроченных нет, "
                       "все имена находятся в документах-ожидателях ✓")
     return report, ok
 
@@ -1114,18 +1197,20 @@ def check_coordination_log(log_path: Path,
     return out + warns, True
 
 
-# Закрытие долга без цели (постановка 2026-11-09, П-4): норма «строка не удаляется, в конец
-# дописывается «; закрыт: <дата>, <коммит или тег>»» была, утилиты не было — закрывали руками или
-# разовым скриптом. Режим --close находит строку раздела долгов по FROM-ID (и, если переданы,
-# дословной формулировке и номеру строки), дописывает приписку и не трогает остальные байты файла
-# (переводы строк, BOM, кодировка). Повторный запуск по закрытой строке ничего не меняет. Долг
-# формы 1 («нет целевого артефакта …») так не закрывается: его норма — ID цели во второй колонке.
+# Закрытие долга без цели (постановка 2026-11-09, П-4; с 2026-11-20 — удаление строки, решение
+# владельца): режим --close находит строку раздела долгов по FROM-ID (и, если переданы, дословной
+# формулировке и номеру строки) и удаляет её; остальные байты файла (переводы строк, BOM,
+# кодировка) не меняются. В вывод — удалённая строка целиком, дата и основание (--by, --target,
+# --note): текст для сообщения коммита. Строка прежней формы с припиской «закрыт:» тоже удаляется.
+# Несколько кандидатов без уточнения — отказ с перечнем, файл не трогается. Долг по ссылке
+# («нет целевого артефакта …») ключом не закрывается: его закрывает заход-создатель цели —
+# ссылка в карточке, строка удаляется.
 def close_debt(matrix_path: Path, from_id: str, by: str, statement: Optional[str] = None,
                line_no: Optional[int] = None, targets: Optional[List[str]] = None,
                note: Optional[str] = None, day: Optional[str] = None) -> Tuple[List[str], bool]:
-    """(строки отчёта, успех). Успех — строка закрыта сейчас или уже была закрыта; отказ — строки
-    нет, кандидатов несколько, формулировка расходится, форма строки не та или значения ломают
-    таблицу. Файл перезаписывается только при изменении."""
+    """(строки отчёта, успех). Успех — строка удалена; отказ — строки нет, кандидатов несколько,
+    формулировка расходится, форма строки не та или значения ломают строку отчёта. Файл
+    перезаписывается только при удалении."""
     import datetime as _dt
     for label, val in (("--by", by), ("--note", note or ""), ("--target", ",".join(targets or []))):
         if "|" in val or "\n" in val:
@@ -1167,8 +1252,9 @@ def close_debt(matrix_path: Path, from_id: str, by: str, statement: Optional[str
         other_rows = [r for r in other_rows if r[0] == line_no]
     if not issue_rows:
         if other_rows:
-            return ([f"✗ строка долга от {from_id} не вида «долг <вид>: «…»» — закрытие дописыванием "
-                     "к ней не применяется (долг формы 1 закрывается ID цели во второй колонке):"]
+            return ([f"✗ строка долга от {from_id} не вида «долг <вид>: «…»» — ключ к ней не "
+                     "применяется (долг по ссылке закрывает заход-создатель цели: ссылка в карточке, "
+                     "строка удаляется):"]
                     + [f"   строка {n}: {r[:140]}" for n, r in other_rows]), False
         where = f" в строке {line_no}" if line_no is not None else ""
         return [f"✗ строки долга без цели от {from_id}{where} в разделе «{_DEBTS_HEADING}» нет"], False
@@ -1186,20 +1272,50 @@ def close_debt(matrix_path: Path, from_id: str, by: str, statement: Optional[str
                 + [f"   строка {n}: «{f['statement'][:100]}»" for n, _r, f in issue_rows]), False
     n, ln, _f = issue_rows[0]
     done = issue_closed(ln)
-    if done:
-        return [f"i строка {n}: долг от {from_id} уже закрыт ({done}) — файл не изменён"], True
-    suffix = f"; закрыт: {day or _dt.date.today().isoformat()}, {by.strip()}"
+    basis = f"{day or _dt.date.today().isoformat()}, {by.strip()}"
     if targets:
-        suffix += f", затронуто: {', '.join(t.strip() for t in targets if t.strip())}"
+        basis += f", затронуто: {', '.join(t.strip() for t in targets if t.strip())}"
     if note and note.strip():
-        suffix += f", {note.strip()}"
-    body = ln.rstrip()
-    new_ln = body[:-1].rstrip() + suffix + " |"
-    eol = lines[n - 1][len(ln):]
-    lines[n - 1] = new_ln + eol
+        basis += f", {note.strip()}"
+    del lines[n - 1]
     out = "".join(lines).encode("utf-8")
     matrix_path.write_bytes((b"\xef\xbb\xbf" if bom else b"") + out)
-    return [f"✓ строка {n}: долг от {from_id} закрыт — дописано «{suffix[2:]}»"], True
+    return ([f"✓ строка {n} удалена: долг от {from_id} закрыт {basis}"
+             + (f" (строка была закрыта припиской прежней формы: {done})" if done else "")]
+            + [f"   удалённая строка: {ln.strip()}"]), True
+
+
+def prune_closed(matrix_path: Path, write: bool = False) -> Tuple[List[str], bool]:
+    """Разовая чистка закрытых строк раздела долгов прежних форм (решение 2026-11-20: закрытый
+    долг снимается из матрицы). Снимаются только строки, закрытие которых однозначно
+    (closed_debt_rows, prunable); голый ID цели вне реестра и нераспознанные строки не
+    трогаются. Без write — перечень; с write — запись, прочие байты файла не меняются.
+    Успех всегда (это не проверка)."""
+    raw = matrix_path.read_bytes()
+    bom = raw.startswith(b"\xef\xbb\xbf")
+    text = raw[3:].decode("utf-8") if bom else raw.decode("utf-8")
+    lines = text.splitlines(keepends=True)
+    closed = closed_debt_rows(text)
+    prune = [c for c in closed if c["prunable"]]
+    kept = [c for c in closed if not c["prunable"]]
+    total = len(_debt_section_lines(text))
+    n_t = sum(1 for c in prune if c["form"] == "цель")
+    rep: List[str] = []
+    for c in prune:
+        rep.append(f"{'удалена' if write else 'к удалению'}: строка {c['line']} "
+                   f"({c['form']}): {c['raw']}")
+    for c in kept:
+        rep.append(f"не трогается: строка {c['line']} ({c['form']}) — {c['why']}: {c['raw'][:160]}")
+    rep.append(f"{'удалено' if write else 'к удалению'} {len(prune)} (ID цели во второй колонке — "
+               f"{n_t}, приписка «закрыт:» — {len(prune) - n_t}); не трогается {len(kept)}; строк "
+               f"раздела долгов было {total}, останется {total - len(prune)}")
+    if write and prune:
+        drop = {c["line"] for c in prune}
+        out = "".join(ln for i, ln in enumerate(lines, 1) if i not in drop).encode("utf-8")
+        matrix_path.write_bytes((b"\xef\xbb\xbf" if bom else b"") + out)
+    elif not write and prune:
+        rep.append("файл не изменён — запись ключом --write")
+    return rep, True
 
 
 def main() -> int:
@@ -1212,16 +1328,25 @@ def main() -> int:
                     help="корень docs/ комплекта")
     ap.add_argument("--strict", action="store_true")
     ap.add_argument("--close", metavar="FROM-ID",
-                    help="закрыть долг без цели от этого ID: дописать «; закрыт: <дата>, <--by>» в "
-                         "конец строки раздела долгов; остальные байты файла не меняются")
+                    help="закрыть долг без цели от этого ID: удалить его строку из раздела долгов "
+                         "и напечатать её с датой и основанием; остальные байты файла не меняются")
+    ap.add_argument("--prune-closed", action="store_true",
+                    help="разовая чистка: снять закрытые строки раздела долгов прежних форм (ID "
+                         "цели во второй колонке, приписка «закрыт:»); без --write — перечень")
+    ap.add_argument("--write", action="store_true", help="записать результат --prune-closed")
     ap.add_argument("--by", help="коммит, тег или «без изменений» для --close")
     ap.add_argument("--statement", help="дословная формулировка долга (между «»): сверяется, "
                                         "при расхождении — отказ")
     ap.add_argument("--line", type=int, help="номер строки матрицы с долгом (уточнение для --close)")
-    ap.add_argument("--target", help="ID карточек через запятую: «затронуто: <ID>» в приписке")
-    ap.add_argument("--note", help="пояснение в конец приписки закрытия")
+    ap.add_argument("--target", help="ID карточек через запятую: «затронуто: <ID>» в выводе --close")
+    ap.add_argument("--note", help="пояснение в конец вывода --close")
     ap.add_argument("--date", help="дата закрытия ГГГГ-ММ-ДД (по умолчанию — сегодня)")
     args = ap.parse_args()
+    if args.prune_closed:
+        rep, _ok = prune_closed(args.matrix, write=args.write)
+        for ln in rep:
+            print(f"# {ln}")
+        return 0
     if args.close:
         if not args.by:
             ap.error("--close требует --by")

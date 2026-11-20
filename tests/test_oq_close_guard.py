@@ -149,24 +149,27 @@ def test_debt_open_entry_closed_new_form(tmp_path):
     report, ok, warns = _run(docs)
     assert ok
     assert warns == [f"⚠ долг FUN-001 по OQ-001 открыт, а запись закрыта {AFTER} (a1b2c3d4) — "
-                     "допишите закрытие долга или снимите статус"]
+                     "снимите строку долга (--close) или статус записи"]
 
 
 def test_debt_closed_entry_open(tmp_path):
     docs = _kit(tmp_path, _row(tail=f"; закрыт: {AFTER}, a1b2c3d4"), journal("ответ получен, разбор"))
     _report, ok, warns = _run(docs)
     assert ok and len(warns) == 1
-    assert warns[0].startswith(f"⚠ долг FUN-001 по OQ-001 закрыт ({AFTER}, a1b2c3d4), а запись "
-                               "журнала открыта («ответ получен, разбор»)")
+    assert warns[0].startswith(f"⚠ долг FUN-001 по OQ-001 закрыт припиской ({AFTER}, a1b2c3d4), а "
+                               "запись журнала открыта («ответ получен, разбор»)")
+    assert "CORE-20" in warns[0]
 
 
 def test_both_closed_counts_closed_debt(tmp_path):
-    # НЕсрабатывание: оба закрыты; закрытый долг вне счёта открытых — строка i
+    # НЕсрабатывание: оба закрыты; закрытая строка вне счёта открытых — ⚠ «к удалению» (норма
+    # 2026-11-20: закрытый долг снимается из матрицы)
     docs = _kit(tmp_path, _row(tail=f"; закрыт: {AFTER}, a1b2c3d4"),
                 journal(f"закрыт: {AFTER}, a1b2c3d4"))
     report, ok, warns = _run(docs)
     assert ok and warns == []
-    assert "i закрытых долгов без цели: 1" in report
+    assert any(r.startswith("⚠ закрытых строк долга к удалению: 1 (ID цели во второй колонке — 0, "
+                            "приписка «закрыт:» — 1)") for r in report), report
     assert not any(r.startswith("долгов без отсутствующей цели") for r in report)
     assert any(r.startswith("OK: долгов 0,") for r in report)
 
