@@ -388,7 +388,15 @@ def check_bare_entity_mentions(docs: Path) -> List[str]:
     («Название.<…>») — место, где ссылка на модель данных обязательна;
     прочие голые упоминания имён не флагаются (шум: имена встречаются
     в каждом абзаце). ⚠-сигнал, вердикт не трогает — оформление ссылок
-    закрывается дозаходом."""
+    закрывается дозаходом.
+
+    Нормативная форма записи атрибута «Имя.«Атрибут»» (техбук §7) — тот же
+    принцип: имя сущности реестра без ссылки, за ним обращение к атрибуту
+    (постановка 2026-11-19: после замены скобок в карточке сторож молчал
+    при голых обращениях). Для неё вне счёта код (блоки и inline) и
+    дословные литералы в "…"; строковая константа формулы в одинарных
+    кавычках без «» ('"') границей литерала не считается. Форма «Имя.<…>»
+    считается прежним порядком."""
     matrix = docs / "traceability-matrix.md"
     if not matrix.exists():
         return []
@@ -419,12 +427,33 @@ def check_bare_entity_mentions(docs: Path) -> List[str]:
                 if cand.endswith(name):
                     hits[name] = hits.get(name, 0) + 1
                     break
+        # «Имя.«Атрибут»»: блоки кода — до ссылок, константы и литералы — после
+        bare_q = re.sub(r"\[[^\]]*\]\([^)]*\)", " ", blank_code(body))
+        bare_q = _BARE_LIT_RE.sub(" ", _BARE_SQ_CONST_RE.sub(" ", bare_q))
+        hits_q: dict = {}
+        for am in re.finditer(r"([^\n<>|«»]{3,80}?)\.«", bare_q):
+            cand = am.group(1).strip().lower()
+            for name, rid in names.items():
+                if cand.endswith(name):
+                    hits_q[name] = hits_q.get(name, 0) + 1
+                    break
         for name, cnt in sorted(hits.items()):
             report.append(
                 f"⚠ {p.relative_to(docs)}: голое обращение "
                 f"«{name}.<…>» ×{cnt} — карточка {names[name]} есть в "
                 "реестре, обращение к атрибуту оформляется ссылкой")
+        for name, cnt in sorted(hits_q.items()):
+            report.append(
+                f"⚠ {p.relative_to(docs)}: голое обращение "
+                f"{name}.«…» ×{cnt} — карточка {names[name]} есть в "
+                "реестре, обращение к атрибуту оформляется ссылкой")
     return report
+
+
+# дословный литерал "…", inline-код и строковая константа формулы в одинарных
+# кавычках ('"', ', "'): кавычка внутри константы — данные, не граница литерала
+_BARE_LIT_RE = re.compile(r'"[^"\n]*"|`[^`\n]*`')
+_BARE_SQ_CONST_RE = re.compile(r"'[^'\n<>«»]*'")
 
 
 _ENT_FILE_RE = re.compile(r"^(ent(?:-[a-z]{1,4})?-\d+(?:\.\d+)?)[-.]", re.I)

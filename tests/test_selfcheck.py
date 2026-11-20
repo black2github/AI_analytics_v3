@@ -1007,6 +1007,64 @@ class TestBareEntityMentions:
         rep = selfcheck.check_bare_entity_mentions(docs)
         assert rep == []
 
+    # нормативная форма «Имя.«Атрибут»» (постановка 2026-11-19)
+
+    def test_bare_quoted_attribute_access_flagged(self, tmp_path):
+        docs = self._docs(tmp_path,
+                          "# К\n\nЕсли Клиент Банка.«ОГРН» пусто, то "
+                          "Клиент Банка.«ИНН» не меняется.\n")
+        rep = selfcheck.check_bare_entity_mentions(docs)
+        assert len(rep) == 1, rep
+        assert "клиент банка.«…» ×2" in rep[0] and "EXT-002" in rep[0], rep
+
+    def test_quoted_access_in_formula_with_quote_constant_flagged(self, tmp_path):
+        # кавычка в строковой константе формулы (', "' … '"') — не граница
+        # дословного литерала: обращение между константами считается
+        docs = self._docs(tmp_path,
+                          "# К\n\nФормат: «Офис» + ', \"' + "
+                          "Клиент Банка.«Наименование» + '\"'.\n")
+        rep = selfcheck.check_bare_entity_mentions(docs)
+        assert len(rep) == 1 and "клиент банка.«…» ×1" in rep[0], rep
+
+    def test_quoted_access_linked_name_not_flagged(self, tmp_path):
+        # НЕсрабатывание: имя уже стоит ссылкой
+        docs = self._docs(
+            tmp_path,
+            "# К\n\n[Клиент Банка](../dm/d.md).«Статус» пусто.\n")
+        assert selfcheck.check_bare_entity_mentions(docs) == []
+
+    def test_quoted_access_chain_with_linked_link_not_flagged(self, tmp_path):
+        # НЕсрабатывание: цепочка, звено которой оформлено ссылкой
+        docs = self._docs(
+            tmp_path,
+            "# К\n\nЗаявка.[Выпускаемая карта](../dm/c.md)."
+            "[Держатель карты](../dm/h.md).«Адрес места жительства»; "
+            "Клиент Банка.[Адрес клиента](../dm/a.md).«Город».\n")
+        make(docs / "traceability-matrix.md",
+             "# Матрица\n\n## 4. Реестр ID\n\n"
+             "| ID | Название | Файл |\n|---|---|---|\n"
+             "| EXT-002 | Клиент Банка | `srs/dm/d.md` |\n"
+             "| ENT-010 | Держатель карты | `srs/dm/h.md` |\n")
+        assert selfcheck.check_bare_entity_mentions(docs) == []
+
+    def test_quoted_access_in_code_and_literals_not_flagged(self, tmp_path):
+        # НЕсрабатывание: блок кода, inline-код, дословный литерал сообщения
+        docs = self._docs(
+            tmp_path,
+            "# К\n\n```\nКлиент Банка.«ОГРН»\n```\n\n"
+            "Код `Клиент Банка.«ИНН»`. Сообщение \"Не заполнено "
+            "Клиент Банка.«КПП»\".\n")
+        assert selfcheck.check_bare_entity_mentions(docs) == []
+
+    def test_quoted_access_entity_absent_from_kit_not_flagged(self, tmp_path):
+        # НЕсрабатывание: сущности нет ни в карточках, ни в реестре —
+        # текстовый владелец, а не голое обращение
+        docs = self._docs(
+            tmp_path,
+            "# К\n\nВходящие параметры.«ID документа» и "
+            "Подразделение Банка.«Наименование».\n")
+        assert selfcheck.check_bare_entity_mentions(docs) == []
+
 
 class TestGroupContours:
     """Сторож контура групп (полигон 2026-08-29): явная колонка FE/BE
